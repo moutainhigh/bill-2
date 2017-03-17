@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+	
+	<bean id="RebuyService"
+		class="com.herongtech.console.service.busiservice.rebuy.RebuyService"  lazy-init="true">
+	</bean>
+	
+	<bean id="rebuyAuditTrigger"
+		class="com.herongtech.console.service.busiservice.rebuy.RebuyAuditTrigger"  lazy-init="true">
+		<property name="rebuyService" ref="RebuyService"></property>
+	</bean>
+	
+	<bean id="RebuyDraftCallback"
+		class="com.herongtech.console.service.busiservice.rebuy.RebuyDraftCallback"  lazy-init="true">
+	</bean>
+	
+	<bean id="RebuyFacService"
+		class="com.herongtech.console.service.busiservice.rebuy.RebuyFacService"  lazy-init="true">
+	</bean>
+</beans>
+
+
+

@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+	
+	<!-- 状态机 -->
+	<bean id="MachineStatusService"
+		class="com.herongtech.console.service.common.machinestatus.MachineStatusService"  lazy-init="true">
+	</bean>
+	<!-- 利息计算相关 begin -->
+	<bean id="HolidayService"
+		class="com.herongtech.console.service.common.interest.HolidayService"  lazy-init="true">
+    </bean>
+    <bean id="DelayRuleService"
+		class="com.herongtech.console.service.common.interest.DelayRuleService"  lazy-init="true">
+	</bean>
+	<bean id="InterestService"
+		class="com.herongtech.console.service.common.interest.InterestService"  lazy-init="true">
+	</bean>
+	<!-- 利息计算相关 end -->
+	
+	<!-- 日终begin -->
+	<bean id="dayEndSchedulerService"
+		class="com.herongtech.console.service.common.dayend.DayEndSchedulerService"  lazy-init="true">
+	</bean>
+	<bean id="taskPoolService"
+		class="com.herongtech.console.service.common.dayend.TaskPoolService"  lazy-init="true">
+	</bean>
+	<!-- 日终end -->
+	
+	<!-- 审批begin -->
+	<bean id="auditRouteService" class="com.herongtech.console.service.common.audit.AuditRouteService" lazy-init="true">
+		<property name="auditCommonService" ref="auditCommonService"></property>
+	</bean>	
+	
+	<bean id="auditNodeService" class="com.herongtech.console.service.common.audit.AuditNodeService" lazy-init="true">
+		<property name="auditCommonService" ref="auditCommonService"></property>
+	</bean>
+	
+	<bean id="auditStationService" class="com.herongtech.console.service.common.audit.AuditStationService" lazy-init="true">
+		<property name="auditCommonService" ref="auditCommonService"></property>
+	</bean>
+	
+	<bean id="auditTaskService" class="com.herongtech.console.service.common.audit.AuditTaskService" lazy-init="true">
+		<property name="auditCommonService" ref="auditCommonService"></property>
+	</bean>
+	
+	<bean id="auditProcessService" class="com.herongtech.console.service.common.audit.AuditProcessService" lazy-init="true">
+		<property name="auditCommonService" ref="auditCommonService"></property>
+	</bean>
+	
+	<bean id="reAsRoleService" class="com.herongtech.console.service.common.audit.ReAsRoleService" lazy-init="true">
+		<property name="auditCommonService" ref="auditCommonService"></property>
+	</bean>
+	
+	<bean id="reArProdService" class="com.herongtech.console.service.common.audit.ReArProdService" lazy-init="true">
+		<property name="auditCommonService" ref="auditCommonService"></property>
+	</bean>
+	
+	<bean id="auditCommonService" class="com.herongtech.console.service.common.audit.AuditCommonService" lazy-init="true">
+	</bean>
+	<!-- 审批end -->
+	
+	<!-- 导出服务类 -->
+	<bean id="ExportService" class="com.herongtech.console.service.common.export.ExportService" lazy-init="true">
+	</bean>
+	<!-- 导出服务类end -->
+	
+	
+</beans>
+
+
+

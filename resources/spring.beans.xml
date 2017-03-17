@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+
+  <bean id="fileResolver" scope="singleton"
+		class="com.herongtech.fileresolver.impl.FileResolverImpl">
+		<property name="fileProcessorList">
+			<list>
+				<ref bean="i18nFileProcessor" />
+				<ref bean="xStreamFileProcessor" />
+
+                <!-- validate -->
+                <ref bean="validateMapFileProcessor"/>
+                <ref bean="validateFileProcessor"/>
+                
+				<!-- xmlservice -->
+				<ref bean="xmlServiceFileProcessor" />
+				<ref bean="xmlSysServiceFileProcessor" />
+				
+
+				<!-- <ref bean="processorFileResolver" /> -->
+				<ref bean="fullContextFileFinder" />
+
+				<!-- context2objects -->
+				<ref bean="generatorFileProcessor"/>
+				<!-- serviceMapping -->
+				<ref bean="serviceMappingFileProcessor"/>
+                
+                <!-- serviceinterface -->
+				<ref bean="localServiceFileProcessor" />
+			</list>
+		</property>
+	</bean>
+	
+	
+
+	<bean id="RiskBillService"
+		class="com.herongtech.console.service.riskbill.RiskBillService"  lazy-init="true">
+	</bean>
+
+	<bean id="CustManageService"
+		class="com.herongtech.console.service.custmanager.CustManageService"  lazy-init="true">
+
+	</bean>
+	
+	<bean id="DeptService"
+		class="com.herongtech.console.service.dept.DeptService"  lazy-init="true">
+	</bean>
+	
+	<bean id="BlackService"
+		class="com.herongtech.console.service.black.BlackService"  lazy-init="true">
+	</bean>
+	
+	
+	
+	<bean id="BankInfoService"
+		class="com.herongtech.console.service.bankinfo.BankInfoService"  lazy-init="true">
+	</bean>
+	
+	<bean id="SignProdService"
+		class="com.herongtech.console.service.signProd.SignProdService"  lazy-init="true">
+	</bean>
+	
+	<bean id="ErrmsgService"
+		class="com.herongtech.console.service.errmsg.ErrmsgService"  lazy-init="true">
+	</bean>
+
+	
+	
+	
+	
+
+	<bean id="BbspProductService"
+		class="com.herongtech.console.service.bbspProduct.BbspProductService"  lazy-init="true">
+	</bean>
+
+
+	<bean id="TradeBankService"
+		class="com.herongtech.console.service.tradeBank.TradeBankService"  lazy-init="true">
+	</bean>
+	
+	<bean id="TradeBankRootService"
+		class="com.herongtech.console.service.tradeBankRoot.TradeBankRootService"  lazy-init="true">
+	</bean>
+
+	
+	
+	
+	<bean id="WorkingAdsService"
+		class="com.herongtech.console.service.workingads.WorkingAdsService"  lazy-init="true">
+	</bean>
+	
+
+
+	<bean id="CustInfoService"
+		class="com.herongtech.console.service.custinfo.CustInfoService"  lazy-init="true">
+	</bean>
+
+    <bean id="CustInfoAcctService"
+		class="com.herongtech.console.service.custinfoacct.CustInfoAcctService"  lazy-init="true">
+	</bean>
+	
+	<bean id="TransPubService"
+		class="com.herongtech.console.service.transpub.TransPubService"  lazy-init="true">
+	</bean>
+	
+	<bean id="CertificateBindingService"
+		class="com.herongtech.console.service.certificateBinding.CertificateBindingService"  lazy-init="true">
+	</bean>
+	<bean id="DiscAuditPrint" class="com.herongtech.console.web.busicontroller.print.DiscAuditPrint" lazy-init="true">
+	</bean> 
+	<bean id="SaleBackListPrint" class="com.herongtech.console.web.busicontroller.print.SaleBackListPrint" lazy-init="true">
+	</bean> 
+	<bean id="BuybackListPrint" class="com.herongtech.console.web.busicontroller.print.BuybackListPrint" lazy-init="true">
+	</bean> 
+	<bean id="CollateralizationListPrint" class="com.herongtech.console.web.busicontroller.print.CollateralizationListPrint" lazy-init="true">
+	</bean>
+	
+	
+	<bean id="SaleListPrint" class="com.herongtech.console.web.busicontroller.print.SaleListPrint" lazy-init="true">
+	</bean> 
+	
+	<bean id="DiscPrint" class="com.herongtech.console.web.busicontroller.print.DiscPrint" lazy-init="true">
+	</bean>
+	<bean id="BalanceSearchService"
+		class="com.herongtech.console.service.balanceSearch.BalanceSearchService"  lazy-init="true">
+	</bean>
+	<bean id="AccountFlowSearchService"
+		class="com.herongtech.console.service.accountFlowSearch.AccountFlowSearchService"  lazy-init="true">
+	</bean>
+	<bean id="TailAfterSearchService"
+		class="com.herongtech.console.service.tailAfterSearch.TailAfterSearchService"  lazy-init="true">
+	</bean>
+	<bean id="HappenSearchService"
+		class="com.herongtech.console.service.happensearch.HappenSearchService"  lazy-init="true">
+	</bean>
+	<bean id="NoticeService"
+		class="com.herongtech.console.service.notice.NoticeService"  lazy-init="true">
+	</bean>
+	
+	<bean id="ProdLimitTypeService"
+		class="com.herongtech.console.service.prodLimitType.ProdLimitTypeService"  lazy-init="true">
+	</bean>
+	<bean id="ProductService"
+		class="com.herongtech.console.service.common.product.ProductService"  lazy-init="true">
+	</bean>
+	<!--托收清单打印-->
+	<bean id="SubCollListPrint"
+		class="com.herongtech.console.web.busicontroller.print.SubCollListPrint"  lazy-init="true">
+	</bean>
+	<bean id="SubCollListOtherPrint"
+		class="com.herongtech.console.web.busicontroller.print.SubCollListOtherPrint"  lazy-init="true">
+	</bean>
+	<!-- 托收凭证打印 -->
+	<bean id="SubCollPzPrint"
+		class="com.herongtech.console.web.busicontroller.print.SubCollPzPrint"  lazy-init="true">
+	</bean>
+	<bean id="SubCollPzOtherPrint"
+		class="com.herongtech.console.web.busicontroller.print.SubCollPzOtherPrint"  lazy-init="true">
+	</bean>
+	
+	<!-- 转贴现申请   清单打印 -->
+	<bean id="RebuyListPrint"
+		class="com.herongtech.console.web.busicontroller.print.RebuyListPrint"  lazy-init="true">
+	</bean>
+	
+	<!-- 转贴现申请   凭证打印 -->
+	<bean id="RebuyPZPrint"
+		class="com.herongtech.console.web.busicontroller.print.RebuyPZPrint"  lazy-init="true">
+	</bean>
+	
+	<bean id="TaskLogService"
+		class="com.herongtech.console.service.common.dayend.TaskLogService"  lazy-init="true">
+	</bean>
+
+	<!-- ecds基础数据导入 -->
+	<bean id="EcdsDataImportService"
+		class="com.herongtech.console.service.ecdsdataimportservice.EcdsDataImportService"  lazy-init="true">
+	</bean>
+	
+	<!-- 网银端查询功能 -->
+	<bean id="BillFlowInfoService"
+		class="com.herongtech.rc.service.billflowinfo.BillFlowInfoService"  lazy-init="true">
+	</bean>
+	<!-- 余额查询处理功能 -->
+	<bean id="CustBillStorageService"
+		class="com.herongtech.rc.service.custBillStorage.CustBillStorageService"  lazy-init="true">
+	</bean>
+</beans>
+

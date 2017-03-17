@@ -1,0 +1,9 @@
+body {
+	padding-bottom: 0;
+	background-color: #FFFEFF;
+	min-height: 100%;
+	font-family: 'Microsoft YaHei';
+	font-size: 14px;
+	color: #393939;
+	line-height: 1.5
+}

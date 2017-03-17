@@ -1,0 +1,29 @@
+<triggers>
+	<!-- ***********************贴现审批审批回调********************** -->
+	<trigger prodNo="001001001" beanId="discAuditTrigger" />
+	<trigger prodNo="001001002" beanId="discAuditTrigger" />
+	<trigger prodNo="001001003" beanId="discAuditTrigger" />
+	<trigger prodNo="001001004" beanId="discAuditTrigger" />
+	<trigger prodNo="001001005" beanId="discAuditTrigger" />
+	<trigger prodNo="001001006" beanId="discAuditTrigger" />
+	<!-- ***********************质押审批审批回调********************** -->
+	<trigger prodNo="001004001" beanId="CollateAuditTrigger" />
+	
+	<!-- ***********************转贴现转入审批回调********************** -->
+	<trigger prodNo="001002001" beanId="rebuyAuditTrigger" />
+	<trigger prodNo="001002002" beanId="rebuyAuditTrigger" />
+	<trigger prodNo="001002003" beanId="rebuyAuditTrigger" />
+	<trigger prodNo="001002004" beanId="rebuyAuditTrigger" />
+	<trigger prodNo="001002005" beanId="rebuyAuditTrigger" />
+	<trigger prodNo="001002006" beanId="rebuyAuditTrigger" />
+	<trigger prodNo="001002007" beanId="rebuyAuditTrigger" />
+	<trigger prodNo="001002008" beanId="rebuyAuditTrigger" />
+	
+	<!-- ***********************转卖审批审批回调********************** -->
+	<trigger prodNo="001003001" beanId="saleAuditTrigger" />
+	<trigger prodNo="001003002" beanId="saleAuditTrigger" />
+	<trigger prodNo="001003003" beanId="saleAuditTrigger" />
+	<trigger prodNo="001003004" beanId="saleAuditTrigger" />
+	<trigger prodNo="001003005" beanId="saleAuditTrigger" />
+	<trigger prodNo="001003006" beanId="saleAuditTrigger" />
+</triggers>

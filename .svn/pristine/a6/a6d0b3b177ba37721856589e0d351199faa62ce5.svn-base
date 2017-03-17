@@ -1,0 +1,219 @@
+<link href="/bbsp/public/css/print.css" rel="stylesheet" type="text/css" />
+
+
+<!--总记录数 -->
+#set($totalSize=$td.itemList.size())  
+#set($totalSizeConst=$td.itemList.size())  
+
+<!--总页数 一页放3条 -->
+#set($totalPages=0)		
+<!--每页条数 3  -->
+#set($pageSize=3)
+ 
+		#if($totalSize>3)
+			#set($totalSize=$totalSize - $pageSize)
+			#set($totalPages=$totalSize/$pageSize) 
+			#set($myMod=$totalSize%$pageSize)
+			#if($myMod>0)
+				#set($totalPages=$totalPages+1)
+			#end
+		#else
+			#set($pageSize=$totalSize)												
+		#end	
+		
+		#set($totalPages=$totalPages+1)		
+
+<!--以页为整体打印 每页打印3条 -->
+#set($mypage=1)
+#set($nextPageSize=0)			
+<!-- 页循环-->
+#foreach( $mypage in [1..$totalPages] )
+ 
+		<!--nextPageSize循环计数器 第一页时进行初始化 -->
+		#if($mypage<2)
+ 
+			#set($nextPageSize = 0)
+		#end 
+				
+		<!--最后一页 可能不够 3条 -->
+		#if($mypage==$totalPages)
+			#set($pageSize=$totalSizeConst - $nextPageSize)						
+		#end
+		 
+		<!--页内循环  -->
+		#set($k=1) 
+		#foreach( $tmp2 in [1..$pageSize] )
+			
+			
+				<table width="580"  border="0" align="center"	cellpadding="0" cellspacing="0" style="table-layout:fixed;">
+		<tr>
+			<td height="36"></td>
+		</tr>	
+		<tr height="25"> 
+			<td height="25">
+				<table width="100%" border="0" align="center"	cellpadding="0" cellspacing="0">
+					<tr>
+						<td width="130" height="25"></td>
+						<td width="20">$!td.itemList.get($nextPageSize).year</td>
+						<td width="10"></td>
+						<td width="15">$!td.itemList.get($nextPageSize).month</td>
+						<td width="10"></td>
+						<td width="15">$!td.itemList.get($nextPageSize).day</td>
+						<td width="150"></td>
+					</tr>
+				</table>
+			</td>
+		</tr>
+		<tr>
+			<td height="75">
+				<table border="0" align="center"	cellpadding="0" cellspacing="0" width="100%">
+					<tr>
+						<td width="52" height="25"></td>
+						#if($td.itemList.get($nextPageSize).billClass.equals("2"))
+							<td width="40">$!td.itemList.get($nextPageSize).billTypeString</td>
+							<td width="20"></td>
+							<td width="180"  class="STYLE-T-CELL-SMALL">$!td.itemList.get($nextPageSize).billNo</td>
+							<td width="75"></td>
+							#if($td.itemList.get($nextPageSize).applicant.length()>18)
+								<td width="218" class="STYLE-T-CELL-SMALL">$!td.itemList.get($nextPageSize).applicant</td>
+							#else
+								<td width="218" class="STYLE-T-CELL-NORMAL">$!td.itemList.get($nextPageSize).applicant</td>
+							#end
+						#else
+							<td width="90">$!td.itemList.get($nextPageSize).billTypeString</td>
+							<td width="30"></td>
+							<td width="140">$!td.itemList.get($nextPageSize).billNo</td>
+							<td width="55"></td>
+							#if($td.itemList.get($nextPageSize).applicant.length()>18)
+								<td width="218" class="STYLE-T-CELL-SMALL">$!td.itemList.get($nextPageSize).applicant</td>
+							#else
+								<td width="218" class="STYLE-T-CELL-NORMAL">$!td.itemList.get($nextPageSize).applicant</td>
+							#end
+							
+						#end 						
+					</tr>
+					<tr>
+						<td height="25"></td>
+						<td colspan="3">$!td.itemList.get($nextPageSize).outBillDate</td>
+						<td></td>
+						<td>$!td.itemList.get($nextPageSize).applicantAccount</td>
+					</tr>
+					<tr>
+						<td height="25"></td>
+						<td colspan="3">$!td.itemList.get($nextPageSize).endBillDate</td>
+						<td></td>
+						
+						#if($td.itemList.get($nextPageSize).applicantBankName.length()>18)
+							<td class="STYLE-T-CELL-SMALL">$!td.itemList.get($nextPageSize).applicantBankName</td>
+						#else
+							<td class="STYLE-T-CELL-NORMAL">$!td.itemList.get($nextPageSize).applicantBankName</td>
+						#end
+					</tr>
+				</table>
+			</td>
+		</tr>
+		<!--汇票承兑人行 -->
+		<tr>
+			<td height="25">
+				<table align="center"	cellpadding="0" cellspacing="0" width="100%" style="table-layout:fixed;">
+					<tr>
+						<td width="74" height="25"></td>
+						<!-- 汇票承兑人 名称-->
+						#if($td.itemList.get($nextPageSize).acceptor.length()>22)
+							<td width="300" class="STYLE-T-CELL-SMALL">$!td.itemList.get($nextPageSize).acceptor</td>
+						#else
+							<td width="300" class="STYLE-T-CELL-NORMAL">$!td.itemList.get($nextPageSize).acceptor</td>
+						#end 
+						
+						<!-- 汇票承兑人 账号，暂时无数据 -->
+						<td width="65"></td>
+						<!-- 汇票承兑人 开户银行 -->						
+						#if($td.itemList.get($nextPageSize).outBillBank.length()>18)
+							<td class="STYLE-T-CELL-SMALL">$!td.itemList.get($nextPageSize).outBillBank</td>
+						#else
+							<td class="STYLE-T-CELL-NORMAL">$!td.itemList.get($nextPageSize).outBillBank</td>
+						#end 
+					</tr>
+				</table>
+			</td>
+		</tr>
+		<tr><td height="1"></td></tr>
+		<!--人民币 大写、小写 -->
+		<tr valign="middle">
+			<td height="30">
+				<table align="center"	cellpadding="0" cellspacing="0" width="100%">
+					<tr valign="middle">
+						<td width="100" height="30"></td>
+						<td width="225">$!td.itemList.get($nextPageSize).billAmountBig</td>
+						<td width="40" align="right">$!td.itemList.get($nextPageSize).moneyFlag</td>
+						<td width="200">
+							<table border="0" align="center"	cellpadding="0" cellspacing="0" width="200" style="table-layout:fixed;">
+								<tr valign="middle">
+									$!td.itemList.get($nextPageSize).billAmountString									
+								</tr>
+							</table>
+						</td>
+						<td width="15"></td>
+					</tr>
+				</table>
+			</td>
+		</tr>
+		<tr >
+			<td  height="33">
+				<table align="center"	cellpadding="0" cellspacing="0" width="100%" style="table-layout:fixed;">
+					<tr valign="bottom">
+						<td width="10"  height="33" ></td>
+						<td width="60">$!td.itemList.get($nextPageSize).discRate%</td>
+						<td width="2" ></td>
+						<td width="30" align="right">$!td.itemList.get($nextPageSize).invMoneyFlag</td>
+						<td width="200"  height="33" >
+							<table border="0" align="center"	cellpadding="0" cellspacing="0" width="100%" style="table-layout:fixed;">
+								<tr valign="bottom">
+									$!td.itemList.get($nextPageSize).InterestString									
+								</tr>
+							</table>
+						</td>
+						<td width="23"></td>
+						<td width="40" align="right">$!td.itemList.get($nextPageSize).payMoneyFlag</td>
+						<td width="200"  height="33" >
+							<table border="0" align="center"	cellpadding="0" cellspacing="0" width="100%" style="table-layout:fixed;">
+								<tr valign="bottom">
+									$!td.itemList.get($nextPageSize).payMoneyString									
+								</tr>
+							</table>
+						</td>
+						<td width="15"></td>
+					</tr>
+				</table>
+			</td>
+		</tr>
+                <tr>
+		     <td height="75"></td>
+		</tr>
+		<tr align="right">
+		     <td width="550">$!td.itemList.get($nextPageSize).elecDepositString</td>
+		</tr>
+		#if($k==3)
+				<tr>
+				<td height="47"></td>
+			</tr>
+		#else
+			<tr>
+				<td height="144"></td>
+			</tr>
+		#end
+	</table>
+			
+			
+			#set($k=$k+1)
+			#set($nextPageSize=$nextPageSize+1)
+		#end
+	#set($mypage= $mypage+1)			
+#end
+
+
+
+
+	
+	
+	

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root>
+	<!-- 页面默认显示条数-->
+   <param id="pageCount" value="50" />
+ 
+ 
+ 
+ <!-- #################### 系统开关类  ########################## -->
+   <param id="coreSwitch" value="0" />
+   <param id="creditSwitch" value="0" />
+   <param id="auditSwitch" value="1" />
+   <!-- #################### 风险检查参数  ########################## -->
+   <param id="riskBillCheckSwitch" value="1" />
+    <param id="blackListCheckSwitch" value="1" />
+   <param id="balanceCheckSwitch" value="1" />
+   
+ <!-- #################### ECDS相关  ########################## -->   
+ 	<param id="userCertPassword" value="600016" /><!-- 证书密码 -->
+ 	<param id="userCertFilePath" value="ecdsdata/3051000001.pfx" /><!-- 证书路径 -->
+ 	
+ <!-- #################### 打印模板路径  ########################## -->   	
+ 	<param id="DiscAuditPrintPath" value="print/1030601.vm" /><!-- 清单膜版路径 -->
+ 	<param id="DiscPrintsellerPath" value="print/1030102.vm" /><!-- 凭证膜版路径 付息方式为  2-卖方付息-->
+ 	<param id="DiscPrintotherPath" value="print/1030301.vm" /><!-- 凭证膜版路径 付息方式为  卖方付息 以外的方式-->
+ 	<param id="SubcollbillprintPath" value="print/1070401.vm" /><!-- 发拖清单打印膜版 -->
+ 	<param id="SubcollbillpzprintPath" value="print/1070101.vm" /><!-- 发拖凭证打印膜版 -->
+ 	<param id="RebuyListprintPath" value="print/1050101.vm" /><!-- 转贴现申请  清单打印膜版 -->
+ 	<param id="RebuyListpzprintPath" value="print/1050301.vm" /><!-- 转贴现申请  凭证打印膜版 -->
+ 	<param id="SaleListPrintPath" value="print/1060301.vm"/><!-- 转贴现转出  清单打印膜版 -->
+ 	<param id="SaleBackListPrintPath" value="print/1050601.vm"/><!-- 到期返售  清单打印膜版 -->
+ 	<param id="BuyBackListPrintPath" value="print/1060701.vm"/><!-- 到期回购  清单打印膜版 -->
+ 	<param id="CollateralizationListPrintPath" value="print/1110204.vm"/><!-- 质押  清单打印膜版 -->
+ 	
+  <!-- #################### ecds基础数据导入  ########################## -->   		
+ 	<param id="ECDS_AP_DATA" value="ecdsdata/ECDS_AP_DATA.dat" />
+ 	<param id="ECDS_AUTHLIST_DATA" value="ecdsdata/ECDS_AUTHLIST_DATA.dat" />
+ 	<param id="ECDS_BANK_ASS_DATA" value="ecdsdata/ECDS_BANK_ASS_DATA.dat" />
+ 	<param id="ECDS_BANK_DATA" value="ecdsdata/ECDS_BANK_DATA.dat" />
+ 	<param id="ECDS_COMMON_DATA" value="ecdsdata/ECDS_COMMON_DATA.dat" />
+ 	<param id="ECDS_PS_ASS_DATA" value="ecdsdata/ECDS_PS_ASS_DATA.dat" />
+ 	<param id="ECDS_PSAP_ASS_DATA" value="ecdsdata/ECDS_PSAP_ASS_DATA.dat" />
+ 	
+ 	<!-- ####################虚拟柜员参数配置  ########################## -->   	
+ 	<param id="virtualUserId" value="999999"/><!-- 虚拟柜员编号 -->
+ 	<param id="virtualUserBranchNo" value="虚拟机构"/><!-- 虚拟柜员所属机构 -->
+ 	<param id="rootBankNo" value="305100000013"/><!-- 总行行号 -->
+</root>

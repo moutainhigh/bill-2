@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document>
+     <!-- 
+          type:数据类型 I 整形   S字符串    F浮点型 
+          outerTagName:外部标签名称
+          innerTagName:内部标签名称
+          length：长度
+          scale：精度
+      -->
+     <list> 
+        <field outerTagName="functionId" innerTagName="functionId" length="6" type="S" scale="0" ></field>
+        <field outerTagName="exSerial" innerTagName="exSerial" length="32" type="S" scale="0" ></field>
+        <field outerTagName="bankNo" innerTagName="bankNo" length="2" type="S" scale="0" ></field>
+        <field outerTagName="branchNo" innerTagName="branchNo" length="16" type="S" scale="0" ></field>
+        <field outerTagName="channel" innerTagName="channel" length="1" type="S" scale="0" ></field>
+        <field outerTagName="operator" innerTagName="operator" length="32" type="S" scale="0" ></field>
+        <field outerTagName="authOper" innerTagName="authOper" length="32" type="S" scale="0" ></field>
+        <field outerTagName="authPwd" innerTagName="authPwd" length="32" type="S" scale="0" ></field>
+        <field outerTagName="applyDate" innerTagName="applyDate" length="0" type="I" scale="0" ></field>
+        <field outerTagName="applyTime" innerTagName="applyTime" length="0" type="I" scale="0" ></field>
+        <field outerTagName="reserve1" innerTagName="reserve1" length="250" type="S" scale="0" ></field>
+        <field outerTagName="reserve" innerTagName="reserve" length="250" type="S" scale="0" ></field>
+        <field outerTagName="errorNo" innerTagName="errorNo" length="7" type="S" scale="0" ></field>
+        <field outerTagName="errorInfo" innerTagName="errorInfo" length="100" type="S" scale="0" ></field>
+        <field outerTagName="sysDate" innerTagName="sysDate" length="0" type="I" scale="0" ></field>
+        <field outerTagName="sysTime" innerTagName="sysTime" length="0" type="I" scale="0" ></field>
+        <field outerTagName="custAccount" innerTagName="custAccount" length="50" type="S" scale="0" ></field>
+        <field outerTagName="pageSize" innerTagName="pageSize" length="0" type="I" scale="0" ></field>
+        <field outerTagName="currentPage" innerTagName="currentPage" length="0" type="I" scale="0" ></field>
+         
+        <field outerTagName="totalRows" innerTagName="totalRows" length="0" type="I" scale="0" ></field>
+        <field outerTagName="retNum" innerTagName="retNum" length="0" type="I" scale="0" ></field>
+        <field outerTagName="rgctId"              innerTagName="rgctId"              length="0"     type="I"  scale="0"></field>   
+		<field outerTagName="billNo"              innerTagName="billNo"              length="30"    type="S"  scale="0"></field>  
+		<field outerTagName="conferNo"            innerTagName="conferNo"            length="50"    type="S"  scale="0"></field>  
+		<field outerTagName="invoiceNo"           innerTagName="invoiceNo"           length="50"    type="S"  scale="0"></field>  
+		<field outerTagName="billType"            innerTagName="billType"            length="1"     type="S"  scale="0"></field>  
+		<field outerTagName="billClass"           innerTagName="billClass"           length="1"     type="S"  scale="0"></field>  
+		<field outerTagName="issueDt"             innerTagName="issueDt"             length="0"     type="I"  scale="0"></field>   
+		<field outerTagName="dueDt"               innerTagName="dueDt"               length="0"     type="I"  scale="0"></field>   
+		<field outerTagName="acceptDt"            innerTagName="acceptDt"            length="0"     type="I"  scale="0"></field>   
+		<field outerTagName="billMoney"           innerTagName="billMoney"           length="12"    type="S"  scale="0"></field>  
+		<field outerTagName="remitter"            innerTagName="remitter"            length="300"   type="S"  scale="0"></field>  
+		<field outerTagName="remitterAcct"        innerTagName="remitterAcct"        length="50"    type="S"  scale="0"></field>  
+		<field outerTagName="remitterBank"        innerTagName="remitterBank"        length="300"   type="S"  scale="0"></field>  
+		<field outerTagName="remitterBankNo"      innerTagName="remitterBankNo"      length="12"    type="S"  scale="0"></field>  
+		<field outerTagName="payee"               innerTagName="payee"               length="300"   type="S"  scale="0"></field>  
+		<field outerTagName="payeeAcct"           innerTagName="payeeAcct"           length="50"    type="S"  scale="0"></field>  
+		<field outerTagName="payeeBank"           innerTagName="payeeBank"           length="300"   type="S"  scale="0"></field>  
+		<field outerTagName="payeeBankNo"         innerTagName="payeeBankNo"         length="12"    type="S"  scale="0"></field>  
+		<field outerTagName="acceptor"            innerTagName="acceptor"            length="300"   type="S"  scale="0"></field>  
+		<field outerTagName="acceptorAcct"        innerTagName="acceptorAcct"        length="50"    type="S"  scale="0"></field>  
+		<field outerTagName="acceptorBank"        innerTagName="acceptorBank"        length="300"   type="S"  scale="0"></field>  
+		<field outerTagName="acceptorBankNo"      innerTagName="acceptorBankNo"      length="12"    type="S"  scale="0"></field>  
+		<field outerTagName="banEndorsementMark"  innerTagName="banEndorsementMark"  length="1"     type="S"  scale="0"></field>  
+     </list>
+</document>

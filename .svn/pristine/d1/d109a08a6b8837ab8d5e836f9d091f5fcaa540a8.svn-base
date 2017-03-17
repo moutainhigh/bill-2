@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+	<bean id="EcdsCommonDataService"
+		class="com.herongtech.rc.service.ecdsbankdata.EcdsCommonDataService"  lazy-init="true">
+	</bean>
+	
+	<bean id="EcdsBankDataService"
+		class="com.herongtech.rc.service.ecdsbankdata.EcdsBankDataService"  lazy-init="true">
+	</bean>
+	
+	<bean id="RgctDraftLogService"
+		class="com.herongtech.rc.service.rcgtdraftlog.RgctDraftLogService"  lazy-init="true">
+	</bean>
+	<bean id="RgctDraftTemplateService"
+		class="com.herongtech.rc.service.rgctdrafttemplate.RgctDraftTemplateService"  lazy-init="true">
+	</bean>
+	
+	<bean id="RgctExceptionDraftService"
+		class="com.herongtech.rc.service.rgctexceptiondraft.RgctExceptionDraftService"  lazy-init="true">
+	</bean>
+	<bean id="RgctEcdsStatusService"
+		class="com.herongtech.rc.service.rgctecdsstatus.RgctEcdsStatusService"  lazy-init="true">
+	</bean>
+	
+	<bean id="EcdsApDataService"
+		class="com.herongtech.rc.service.ecdsbankdata.EcdsApDataService"  lazy-init="true">
+	</bean>
+	<bean id="RgctMethodService"
+		class="com.herongtech.rc.service.rgctmethod.RgctMethodService"  lazy-init="true">
+	</bean>
+	
+	<bean id="DraftService"
+		class="com.herongtech.rc.draft.DraftService"  lazy-init="true">
+	</bean>
+	
+	<bean id="DraftMappingService"
+		class="com.herongtech.rc.service.draftmapping.DraftMappingService"  lazy-init="true">
+	</bean>
+	<bean id="DraftDrwrWrapper"
+		class="com.herongtech.console.service.rgctbill.DraftDrwrWrapper"  lazy-init="true">
+	</bean>
+	
+	<bean id="RgctBillInfoService"
+		class="com.herongtech.rc.service.rgctbillinfo.RgctBillInfoService"  lazy-init="true">
+	</bean>
+	<bean id="RgctBillHistService"
+		class="com.herongtech.rc.service.rgctbillhist.RgctBillHistService"  lazy-init="true">
+	</bean>
+	
+	<!--        rc处理类 -->
+	<bean id="RcRegBillService"
+		class="com.herongtech.rc.service.rcservice.RcRegBillService"  lazy-init="true">
+	</bean>
+	<bean id="RcAcptBillService"
+		class="com.herongtech.rc.service.rcservice.RcAcptBillService"  lazy-init="true">
+	</bean>
+	<bean id="RcBillNotifyService"
+		class="com.herongtech.rc.service.rcservice.RcBillNotifyService"  lazy-init="true">
+	</bean>
+	<bean id="RcDiscService"
+		class="com.herongtech.rc.service.rcservice.RcDiscService"  lazy-init="true">
+	</bean>
+	<bean id="RcEndorseService"
+		class="com.herongtech.rc.service.rcservice.RcEndorseService"  lazy-init="true">
+	</bean>
+	<bean id="RcPresentationService"
+		class="com.herongtech.rc.service.rcservice.RcPresentationService"  lazy-init="true">
+	</bean>
+	<bean id="RcImpawnService"
+		class="com.herongtech.rc.service.rcservice.RcImpawnService"  lazy-init="true">
+	</bean>
+	<bean id="RcUnimpawnService"
+		class="com.herongtech.rc.service.rcservice.RcUnimpawnService"  lazy-init="true">
+	</bean>
+	<bean id="RcRebuyService"
+		class="com.herongtech.rc.service.rcservice.RcRebuyService"  lazy-init="true">
+	</bean>
+	<bean id="RcSaleService"
+		class="com.herongtech.rc.service.rcservice.RcSaleService"  lazy-init="true">
+	</bean>
+	<bean id="RcBaseService"
+		class="com.herongtech.rc.service.rcservice.RcBaseService"  lazy-init="true">
+	</bean>
+	<bean id="RcSaveBillService"
+		class="com.herongtech.rc.service.rcservice.RcSaveBillService"  lazy-init="true">
+	</bean>
+	<bean id="RcGetBillService"
+		class="com.herongtech.rc.service.rcservice.RcGetBillService"  lazy-init="true">
+	</bean>
+	<bean id="RcSaleBackService"
+		class="com.herongtech.rc.service.rcservice.RcSaleBackService"  lazy-init="true">
+	</bean>
+	<bean id="RcBuybackService"
+		class="com.herongtech.rc.service.rcservice.RcBuybackService"  lazy-init="true">
+	</bean>
+	<bean id="RcAssuranceService"
+		class="com.herongtech.rc.service.rcservice.RcAssuranceService"  lazy-init="true">
+	</bean>
+</beans>
+
+
+

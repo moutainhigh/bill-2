@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+	
+	<bean id="coreRemoteService"
+		class="com.herongtech.console.service.callremote.CoreRemoteService"  lazy-init="true">
+	</bean>
+	
+	
+	<!-- 贴现记账服务类 -->
+	<bean id="DiscAccountService"
+		class="com.herongtech.console.service.acct.DiscAccountService"  lazy-init="true">
+		<property name="coreRemoteService" ref="coreRemoteService"></property>
+	</bean>
+	
+	<!-- 转卖记账服务类 -->
+	<bean id="SaleAccountService"
+		class="com.herongtech.console.service.acct.SaleAccountService"  lazy-init="true">
+		<property name="coreRemoteService" ref="coreRemoteService"></property>
+	</bean>
+	
+	<!-- 托收记账服务类 -->
+	<bean id="SubcollAccountService"
+		class="com.herongtech.console.service.acct.SubcollAccountService"  lazy-init="true">
+		<property name="coreRemoteService" ref="coreRemoteService"></property>
+	</bean>
+	
+	<!-- 转入记账服务类 -->
+	<bean id="RebuyAccountService"
+		class="com.herongtech.console.service.acct.RebuyAccountService"  lazy-init="true">
+		<property name="coreRemoteService" ref="coreRemoteService"></property>
+	</bean>
+	<!-- 回购记账服务类 -->
+	<bean id="BuybackAccountService"
+		class="com.herongtech.console.service.acct.BuybackAccountService"  lazy-init="true">
+		<property name="coreRemoteService" ref="coreRemoteService"></property>
+	</bean>
+	
+	<!-- 质押记账服务类 -->
+	<bean id="SaveAccountService"
+		class="com.herongtech.console.service.acct.SaveAccountService"  lazy-init="true">
+	</bean>
+	<!-- 解质押记账服务类 -->
+	<bean id="GetAccountService"
+		class="com.herongtech.console.service.acct.GetAccountService"  lazy-init="true">
+	</bean>
+	
+	<!-- 账务库存服务类 -->
+	<bean id="AcctBalanceService"
+		class="com.herongtech.console.service.acct.AcctBalanceService"  lazy-init="true">
+	</bean>
+	<!-- 反售记账服务类 -->
+	<bean id="SalebackAccountService"
+		class="com.herongtech.console.service.acct.SalebackAccountService"  lazy-init="true">
+	</bean>
+	<!-- 出池记账服务类 -->
+	<bean id="OutAccountService"
+		class="com.herongtech.console.service.acct.OutAccountService"  lazy-init="true">
+	</bean>
+	<!-- 出池记账服务类 -->
+	<bean id="IntoAccountService"
+		class="com.herongtech.console.service.acct.IntoAccountService"  lazy-init="true">
+	</bean>
+</beans>
+
+
+

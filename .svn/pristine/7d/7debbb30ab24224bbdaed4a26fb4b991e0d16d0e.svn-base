@@ -1,0 +1,124 @@
+
+.STYLE-QD-T-HEAD {
+	width:1700;
+	border:0;
+	align:center;
+	cellpadding:0;
+	cellspacing:0;
+}
+.STYLE-QD-T-LIST {
+	width:1700;
+	align:center; 
+	border-collapse:collapse;
+	table-layout:fixed;
+	margin:0;
+	padding:0;
+	border:1px solid #666;
+	height:23px;
+}
+.STYLE-QD-T-PAGE {
+	width:1700;
+	align:center; 
+	margin:0;
+	padding:0;
+	border:0;
+}
+.STYLE-H {
+	font-size: 24px;
+	font-weight: bolder;
+	text-align:center;
+	height: 40px;
+}
+.STYLE-H1 {
+	font-size: 20px;
+	height: 35px;
+	text-align:left;
+	vertical-align: middle;
+}
+.STYLE-H1-1 {
+	font-size: 20px;
+	text-align:left;
+	vertical-align: middle;
+	height: 35px;
+	width:400px;
+}
+.STYLE-LH {
+	font-size: 20;
+	border: 1px solid #666; 
+	height: 35px;
+	text-align:center;
+	vertical-align: middle;
+}
+.STYLE-LH-1 {
+	font-size: 18;
+	border: 1px solid #666; 
+	height: 35px;
+	text-align:center;
+	vertical-align: middle;
+}
+.STYLE-L-1 {
+	font-size: 16;
+	border:1px solid #666;
+	height:35px;
+}
+.STYLE-L-1-BNO {
+	font-size: 16;
+	border:1px solid #666;
+	height:35px;
+}
+.STYLE-L-2 {
+	font-size: 14;
+	overflow: hidden; 
+	text-overflow:hidden;
+	word-break:keep-all;
+	border:1px solid #666;
+	height:35px;
+	nowrap:nowrap;
+}
+
+.STYLE-tx-L-1 {
+	font-size: 20;
+	border:1px solid #666;
+	height:35px;
+}
+.STYLE-tx-L-1-BNO {
+	font-size: 16;
+	border:1px solid #666;
+	height:35px;
+}
+.STYLE-tx-L-2 {
+	font-size: 20;
+	overflow: hidden; 
+	text-overflow:hidden;
+	word-break:keep-all;
+	border:1px solid #666;
+	height:35px;
+	nowrap:nowrap;
+}
+
+.STYLE-T-H {
+	font-size: 20px;
+	font-weight: bolder;
+	text-align:center;
+	height:30px;
+}
+.STYLE-T-L-Head {
+	font-size: 14;
+	border:1px solid #666;	
+}
+.STYLE-T-L-H-Content {
+	font-size: 14;
+	border:1px solid #666;	
+}
+.STYLE-PAGE {
+	font-size: 18;
+}
+.STYLE-T-CELL-NORMAL {
+	font-size: 12;
+}
+.STYLE-T-CELL-SMALL {
+	font-size: 11;
+}
+.STYLE-T-CELL-SMALL-2 {
+	font-size: 10;
+}

@@ -1,0 +1,466 @@
+/********************************************
+* 文件名称: SalebackApplyInfoDao.java
+* 系统名称: 合融基础技术平台V2.0
+* 模块名称:
+* 软件版权: 北京合融科技有限公司
+* 功能说明: 
+* 系统版本: 2.0.0.1
+* 开发人员: 技术平台组
+* 开发时间:  
+* 审核人员:
+* 相关文档:
+* 修改记录: 修改日期    修改人员    修改说明
+*********************************************/
+package com.herongtech.console.domain.saleback.dao;
+
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import org.apache.commons.lang.StringUtils;
+
+import com.herongtech.commons.tools.BeanFormat;
+import com.herongtech.console.domain.disc.bean.DiscApplyInfo;
+import com.herongtech.console.domain.disc.bean.DiscSearchBean;
+import com.herongtech.console.core.common.json.Page;
+import com.herongtech.console.core.common.search.QueryCondition;
+import com.herongtech.console.core.util.DateTimeUtil;
+import com.herongtech.console.core.util.MoneyUtils;
+import com.herongtech.console.core.util.StatusUtils;
+import com.herongtech.console.domain.rebuy.bean.RebuyApplyInfo;
+import com.herongtech.console.domain.rebuy.bean.RebuySearchBean;
+import com.herongtech.console.domain.saleback.bean.SaleBackSearchBean;
+import com.herongtech.console.domain.saleback.bean.SalebackApplyInfo;
+import com.herongtech.console.domain.saleback.bean.SalebackBillInfo;
+import com.herongtech.data.interfaces.data.IData;
+import com.herongtech.db.impl.session.DBFactory;
+import com.herongtech.db.interfaces.IDB;
+public class SalebackApplyInfoDao{
+
+public int addSalebackApplyInfo(SalebackApplyInfo obj) throws SQLException {
+	BeanFormat.format(obj);
+	IDB session = DBFactory.getDB();
+	return session.execute("insert into tsaleback_apply_info(saleback_id,batch_no,aim_branch_no,bill_type,bill_class,inner_account,buy_dt,buy_time,saleback_due_dt,is_dummy,is_inner,branch_no,prod_no,status,create_dt,create_time,oper_no,rate_type,is_online,saleback_open_dt,saleback_rate,saleback_money,cust_name,rate,delay_type,delay_days,bill_storage_org,bill_storage_org_name,in_acct_no,in_acct_type,in_acct_name,order_id,apply_status)values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
+	obj.getSalebackId(),obj.getBatchNo(),obj.getAimBranchNo(),obj.getBillType(),obj.getBillClass(),
+	obj.getInnerAccount(),obj.getBuyDt(),obj.getBuyTime(),obj.getSalebackDueDt(),
+	obj.getIsDummy(),obj.getIsInner(),obj.getBranchNo(),obj.getProdNo(),
+	obj.getStatus(),obj.getCreateDt(),obj.getCreateTime(),obj.getOperNo(),
+	obj.getRateType(),obj.getIsOnline(),obj.getSalebackOpenDt(),obj.getSalebackRate(),
+	obj.getSalebackMoney(),obj.getCustName(),obj.getRate(),obj.getDelayType(),
+	obj.getDelayDays(),obj.getBillStorageOrg(),obj.getBillStorageOrgName(),obj.getInAcctNo(),
+	obj.getInAcctType(),obj.getInAcctName(),obj.getOrderId(),obj.getApplyStatus());
+}
+
+public int deleteSalebackApplyInfo(SalebackApplyInfo obj) throws SQLException {
+	IDB session = DBFactory.getDB();
+	return session.execute("delete from tsaleback_apply_info where saleback_id=?",obj.getSalebackId());
+}
+
+public int deleteSalebackApplyInfo(String salebackId) throws SQLException {
+	IDB session = DBFactory.getDB();
+	return session.execute("delete from tsaleback_apply_info where saleback_id=?",salebackId);
+}
+
+public int modifySalebackApplyInfo(SalebackApplyInfo obj) throws SQLException {
+	BeanFormat.format(obj);
+	IDB session = DBFactory.getDB();
+	return session.execute("update tsaleback_apply_info set batch_no=?,aim_branch_no=?,bill_type=?,bill_class=?,inner_account=?,buy_dt=?,buy_time=?,saleback_due_dt=?,is_dummy=?,is_inner=?,branch_no=?,prod_no=?,status=?,create_dt=?,create_time=?,oper_no=?,rate_type=?,is_online=?,saleback_open_dt=?,saleback_rate=?,saleback_money=?,cust_name=?,rate=?,delay_type=?,delay_days=?,bill_storage_org=?,bill_storage_org_name=?,in_acct_no=?,in_acct_type=?,in_acct_name=?,order_id=?,apply_status=? where saleback_id=?",
+	obj.getBatchNo(),obj.getAimBranchNo(),obj.getBillType(),obj.getBillClass(),
+	obj.getInnerAccount(),obj.getBuyDt(),obj.getBuyTime(),obj.getSalebackDueDt(),
+	obj.getIsDummy(),obj.getIsInner(),obj.getBranchNo(),obj.getProdNo(),
+	obj.getStatus(),obj.getCreateDt(),obj.getCreateTime(),obj.getOperNo(),
+	obj.getRateType(),obj.getIsOnline(),obj.getSalebackOpenDt(),obj.getSalebackRate(),
+	obj.getSalebackMoney(),obj.getCustName(),obj.getRate(),obj.getDelayType(),
+	obj.getDelayDays(),obj.getBillStorageOrg(),obj.getBillStorageOrgName(),obj.getInAcctNo(),
+	obj.getInAcctType(),obj.getInAcctName(),obj.getOrderId(),obj.getApplyStatus(),
+	obj.getSalebackId());
+}
+
+public int modifySalebackApplyInfo(SalebackApplyInfo obj,String salebackId) throws SQLException {
+	BeanFormat.format(obj);
+	IDB session = DBFactory.getDB();
+	return session.execute("update tsaleback_apply_info set batch_no=?,aim_branch_no=?,bill_type=?,bill_class=?,inner_account=?,buy_dt=?,buy_time=?,saleback_due_dt=?,is_dummy=?,is_inner=?,branch_no=?,prod_no=?,status=?,create_dt=?,create_time=?,oper_no=?,rate_type=?,is_online=?,saleback_open_dt=?,saleback_rate=?,saleback_money=?,cust_name=?,rate=?,delay_type=?,delay_days=?,bill_storage_org=?,bill_storage_org_name=?,in_acct_no=?,in_acct_type=?,in_acct_name=?,order_id=?,apply_status=? where saleback_id=?",
+	obj.getBatchNo(),obj.getAimBranchNo(),obj.getBillType(),obj.getBillClass(),
+	obj.getInnerAccount(),obj.getBuyDt(),obj.getBuyTime(),obj.getSalebackDueDt(),
+	obj.getIsDummy(),obj.getIsInner(),obj.getBranchNo(),obj.getProdNo(),
+	obj.getStatus(),obj.getCreateDt(),obj.getCreateTime(),obj.getOperNo(),
+	obj.getRateType(),obj.getIsOnline(),obj.getSalebackOpenDt(),obj.getSalebackRate(),
+	obj.getSalebackMoney(),obj.getCustName(),obj.getRate(),obj.getDelayType(),
+	obj.getDelayDays(),obj.getBillStorageOrg(),obj.getBillStorageOrgName(),obj.getInAcctNo(),
+	obj.getInAcctType(),obj.getInAcctName(),obj.getOrderId(),obj.getApplyStatus(),
+	salebackId);
+}
+
+public SalebackApplyInfo getSalebackApplyInfo(String salebackId) throws SQLException {
+	IDB session = DBFactory.getDB();
+	SalebackApplyInfo obj = (SalebackApplyInfo)session.getObject("select * from tsaleback_apply_info where saleback_id=?",SalebackApplyInfo.class,salebackId);
+	return obj;
+}
+
+/**
+ * 可返售的转入批次
+ * @param discType
+ * @param nowdate
+ * @return
+ * @throws SQLException 
+ */
+public List<RebuyApplyInfo> getRebuyApplyInfoBydisctypeandnowdate(Page page,
+		SaleBackSearchBean query) throws SQLException {
+	IDB session = DBFactory.getDB();
+	String baseSql="select distinct apply.* from trebuy_apply_info apply,tsaleback_bill_info bill where  bill.rebuy_id = apply.rebuy_id";
+	QueryCondition qc=new QueryCondition();
+    try {
+        qc.initFromSearchBean(query);
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+	String allsql=qc.getAllSqlString(baseSql);
+	System.out.println(allsql);
+	//分页开始位置
+	int startIndex = (page.getCurrentPage()-1)*page.getShowCount()+1;
+	if(startIndex<0)
+		startIndex = 0;
+	int count =0;
+	List<RebuyApplyInfo> applyList=null;
+	// 获得并返回本次查询的总条数
+	if(qc.getParameterValues() ==null ||qc.getParameterValues().size()==0){//什么条件都不带的情况
+	    count = session.account(qc.getCountSql("distinct apply.rebuy_id"));
+	    applyList=session.getObjectListForPage(allsql, RebuyApplyInfo.class,startIndex, page.getShowCount());
+	}else{
+	    count = session.accountByList(qc.getCountSql("distinct apply.rebuy_id"), qc.getParameterValues()); 
+	    applyList=session.getObjectListByListForPage(allsql,RebuyApplyInfo.class, startIndex, page.getShowCount(), qc.getParameterValues());
+	}
+	page.setTotalResult(count);
+	
+	for(RebuyApplyInfo apply:applyList){
+		query.setRebuyId(apply.getRebuyId());
+		rebuyapplysumApplyInfoT(apply, query);
+	}
+	return applyList;
+
+}
+
+
+
+
+/**
+ * 功能描述：根据条件查询批次列表
+ * @param page
+ * @param query
+ * @return
+ * @throws SQLException
+ */
+public List<SalebackApplyInfo> getSaleBackApplyForCondition(Page page,SaleBackSearchBean query) throws SQLException {
+	IDB session = DBFactory.getDB();
+	String baseSql="select distinct apply.* from tsaleback_apply_info apply,tsaleback_bill_info bill where  bill.saleback_id = apply.saleback_id";
+	QueryCondition qc=new QueryCondition();
+    try {
+        qc.initFromSearchBean(query);
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+	String allsql=qc.getAllSqlString(baseSql);
+	System.out.println(allsql);
+	//分页开始位置
+	int startIndex = (page.getCurrentPage()-1)*page.getShowCount()+1;
+	if(startIndex<0)
+		startIndex = 0;
+	int count =0;
+	List<SalebackApplyInfo> applyList=null;
+	// 获得并返回本次查询的总条数
+	if(qc.getParameterValues() ==null ||qc.getParameterValues().size()==0){//什么条件都不带的情况
+	    count = session.account(qc.getCountSql("distinct apply.saleback_id"));
+	    applyList=session.getObjectListForPage(allsql, SalebackApplyInfo.class,startIndex, page.getShowCount());
+	}else{
+	    count = session.accountByList(qc.getCountSql("distinct apply.saleback_id"), qc.getParameterValues()); 
+	    applyList=session.getObjectListByListForPage(allsql,SalebackApplyInfo.class, startIndex, page.getShowCount(), qc.getParameterValues());
+	}
+	page.setTotalResult(count);
+	//票据张数，与票据金额汇总
+	sumApplyInfoT(applyList, query);
+	return applyList;
+}
+
+
+/**
+ * 功能描述：根据条件查询批次列表
+ * @param page
+ * @param query
+ * @return
+ * @throws SQLException
+ */
+public List<RebuyApplyInfo> getSaleBackApplyForConditiontwo(Page page,SaleBackSearchBean query) throws SQLException {
+	IDB session = DBFactory.getDB();
+	String baseSql="select distinct apply.* from trebuy_apply_info apply,tsaleback_bill_info bill where  bill.rebuy_id = apply.rebuy_id";
+	QueryCondition qc=new QueryCondition();
+    try {
+        qc.initFromSearchBean(query);
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+	String allsql=qc.getAllSqlString(baseSql);
+	System.out.println(allsql);
+	//分页开始位置
+	int startIndex = (page.getCurrentPage()-1)*page.getShowCount()+1;
+	if(startIndex<0)
+		startIndex = 0;
+	int count =0;
+	List<RebuyApplyInfo> applyList=null;
+	// 获得并返回本次查询的总条数
+	if(qc.getParameterValues() ==null ||qc.getParameterValues().size()==0){//什么条件都不带的情况
+	    count = session.account(qc.getCountSql("distinct apply.rebuy_id"));
+	    applyList=session.getObjectListForPage(allsql, RebuyApplyInfo.class,startIndex, page.getShowCount());
+	}else{
+	    count = session.accountByList(qc.getCountSql("distinct apply.rebuy_id"), qc.getParameterValues()); 
+	    applyList=session.getObjectListByListForPage(allsql,RebuyApplyInfo.class, 1, page.getShowCount(), qc.getParameterValues());
+	}
+	page.setTotalResult(count);
+	
+	for(RebuyApplyInfo apply:applyList){
+		query.setRebuyId(apply.getRebuyId());
+		rebuyapplysumApplyInfoT(apply, query);
+	}
+	return applyList;
+}
+
+/**撤销申请批次显示
+ * @throws Exception */
+public List<SalebackApplyInfo> getSalebackApplyInfolist() throws Exception{
+	List<SalebackApplyInfo> list = new ArrayList<SalebackApplyInfo>();
+	String nowdate = DateTimeUtil.get_YYYY_MM_DD_Date(new Date());
+	IDB session = DBFactory.getDB();
+	String oper_status=StatusUtils.queryStatus("SalebackApplyController", "applycancelelec", null)[0];
+	String sql = "select applyinfo.* from tsaleback_apply_info applyinfo, tsaleback_bill_info billinfo where applyinfo.saleback_id=billinfo.saleback_id and to_date(?,'YYYY-MM-DD')>to_date(applyinfo.saleback_open_dt,'YYYY-MM-DD') and to_date(?,'YYYY-MM-DD')<to_date(applyinfo.saleback_due_dt,'YYYY-MM-DD')  and oper_status=?and applyinfo.bill_class='2'";
+	list=session.getObjectList(sql,SalebackApplyInfo.class,nowdate,nowdate,oper_status);
+	return list;
+}
+
+/**
+ * 票据张数，与票据金额汇总
+ * @param applyList
+ * @param query
+ * @throws SQLException 
+ */
+public void sumApplyInfoT(List<SalebackApplyInfo> applyList,SaleBackSearchBean query) throws SQLException{
+    if(applyList == null || applyList.size() == 0) return;
+    IDB session = DBFactory.getDB();
+    //批次汇总票据张数，与票据金额sql
+    StringBuilder sb = new StringBuilder("select count(bill.salebackmx_id)||'' c_num,sum(bill.bill_money)");
+    sb.append(",sum(bill.saleback_money),sum(bill.interest)");
+    sb.append("from tsaleback_bill_info bill where bill.saleback_id = ? ");
+    List<Object> param = new ArrayList<Object>();
+    //占第一位 为第一个问号赋值
+    param.add("");
+    if(query != null){
+        if(StringUtils.isNotBlank(query.getBillClass())){
+            sb.append(" and bill.bill_class = ? ");
+            param.add(query.getBillClass().trim());
+        }
+        if(StringUtils.isNotBlank(query.getBillType())){
+            sb.append(" and bill.bill_type = ? ");
+            param.add(query.getBillType().trim());
+        }
+        if(StringUtils.isNotBlank(query.getApplyOperNo())){
+            sb.append(" and bill.apply_oper_no = ? ");
+            param.add(query.getApplyOperNo().trim());
+        }
+        if(StringUtils.isNotBlank(query.getAuditOperNo())){
+            sb.append(" and bill.audit_oper_no = ? ");
+            param.add(query.getAuditOperNo().trim());
+        }
+        if(StringUtils.isNotBlank(query.getAcctOperNo())){
+        	sb.append(" and bill.acct_oper_no =? ");
+        	param.add(query.getAcctOperNo().trim());
+        }
+        if(StringUtils.isNotBlank(query.getOperStatus())){
+            sb.append(" and bill.oper_status = ? ");
+            param.add(query.getOperStatus().trim());
+        }
+        if(StringUtils.isNotBlank(query.getAccountDt())){
+            sb.append(" and bill.account_dt = ? ");
+            param.add(query.getAccountDt().trim());
+        }
+        if(query.getOpers()!=null){
+            sb.append(" and bill.oper_status in (");
+            for (Object status : query.getOpers()) {
+            	sb.append("?,");
+        		param.add(status);
+        	}
+            sb.deleteCharAt(sb.length()-1);
+            sb.append(')');
+        }
+    }
+    for(SalebackApplyInfo apply:applyList){
+    	//删除第一位 为第一个问号赋值
+    	param.remove(0);
+    	// 为第一个问号赋值
+    	param.add(0, apply.getSalebackId());
+	    IData data=session.getDataByList(sb.toString(), param);
+	    apply.setTotalNum(data.getString(1));
+	    apply.setTotalMoney(MoneyUtils.moneyToString(data.getDouble(2)));
+	    apply.setActualAmount(data.getString(3));
+	    apply.setTotalInterest(data.getString(4));
+    }
+}
+
+/**
+ * 票据张数，与票据金额汇总 转入批次
+ * @param applyList
+ * @param query
+ * @throws SQLException 
+ */
+public void rebuyapplysumApplyInfoT(RebuyApplyInfo apply,SaleBackSearchBean searchBean) throws SQLException{
+	  StringBuilder sb = new StringBuilder("select count(bill.salebackmx_id)||'' c_num,sum(bill.bill_money),sum(bill.saleback_money),sum(bill.interest) from tsaleback_bill_info bill where 1=1 ");
+	    if(searchBean != null){
+	        if(StringUtils.isNotEmpty(searchBean.getRebuyId())){
+	            sb.append("and bill.rebuy_id='"+searchBean.getRebuyId()+"'");
+	        }
+	        if(StringUtils.isNotEmpty(searchBean.getBillClass())){
+	            sb.append("and bill.bill_class='"+searchBean.getBillClass()+"'");
+	        }
+	        if(StringUtils.isNotEmpty(searchBean.getBillType())){
+	            sb.append("and bill.bill_type='"+searchBean.getBillType()+"'");
+	        }
+	        if(StringUtils.isNotEmpty(searchBean.getOperStatus())){
+	            sb.append("and bill.oper_status='"+searchBean.getOperStatus()+"'");
+	        }
+	        if(StringUtils.isNotEmpty(searchBean.getApplyOperNo())){
+	            sb.append("and bill.apply_oper_no='"+searchBean.getApplyOperNo()+"'");
+	        }
+	        if(StringUtils.isNotEmpty(searchBean.getAuditOperNo())){
+	            sb.append("and bill.audit_oper_no='"+searchBean.getAuditOperNo()+"'");
+	        }
+	        if(StringUtils.isNotEmpty(searchBean.getAcctOperNo())){
+	            sb.append("and bill.acct_oper_no='"+searchBean.getAcctOperNo()+"'");
+	        }
+	       if("1".equals(searchBean.getBillClass())&&StringUtils.isNotEmpty(searchBean.getIsInner())){
+	    	   sb.append("and bill.is_inner ='"+searchBean.getIsInner()+"'");
+	       }
+	        
+	        
+	        if(searchBean.getOperStatus()!=null){
+	            
+	            sb.append("and bill.oper_status in ('"+searchBean.getOperStatus()+"')");
+	        }
+	    }
+	    IDB session = DBFactory.getDB();
+	    try {
+	        IData data=session.getData(sb.toString());
+	        apply.setTotalNum( data.getString(1));
+	        apply.setTotalMoney(MoneyUtils.moneyToString(data.getDouble(2)) );
+	        apply.setActualAmount(data.getString(3));
+	        apply.setTotalInterest(data.getString(4));
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+}
+/**
+ * 功能描述：根据条件查询批次列表
+ * @param page
+ * @param query
+ * @return
+ * @throws SQLException
+ */
+public List<SalebackApplyInfo> getRebuyApplyListBySearchBean(Page page,SaleBackSearchBean searchBean) throws SQLException{
+	IDB session = DBFactory.getDB();
+	String baseSql="select distinct apply.* from tsaleback_apply_info apply,tsaleback_bill_info bill where  bill.saleback_id = apply.saleback_id";
+	 QueryCondition qc=new QueryCondition();
+     try {
+         qc.initFromSearchBean(searchBean);
+     } catch (Exception e) {
+         e.printStackTrace();
+     }
+	String allsql=qc.getAllSqlString(baseSql);
+	System.out.println(allsql);
+	//分页开始位置
+	int startIndex = (page.getCurrentPage()-1)*page.getShowCount()+1;
+	if(startIndex<0)
+		startIndex = 0;
+	int count =0;
+	List<SalebackApplyInfo> applyList=null;
+	// 获得并返回本次查询的总条数
+	if(qc.getParameterValues() ==null ||qc.getParameterValues().size()==0){//什么条件都不带的情况
+	    count = session.account(qc.getCountSql("distinct apply.saleback_id"));
+	    applyList=session.getObjectListForPage(allsql, SalebackApplyInfo.class,startIndex, page.getShowCount());
+	}else{
+	    count = session.accountByList(qc.getCountSql("distinct apply.saleback_id"), qc.getParameterValues()); 
+	    applyList=session.getObjectListByListForPage(allsql,SalebackApplyInfo.class, startIndex, page.getShowCount(), qc.getParameterValues());
+	}
+	page.setTotalResult(count);
+	
+	for(SalebackApplyInfo apply:applyList){
+	    searchBean.setSalebackId(apply.getSalebackId());
+	    sumApplyInfo(apply, searchBean);
+	}
+	return applyList;
+}
+
+public SalebackApplyInfo getSalebackApplyInfo(String salebackId,
+		SaleBackSearchBean query) throws SQLException {
+	IDB session = DBFactory.getDB();
+	SalebackApplyInfo obj = (SalebackApplyInfo)session.getObject("select * from tsaleback_apply_info where saleback_id=?",SalebackApplyInfo.class,salebackId);
+	if(query == null) return obj;
+	List<SalebackApplyInfo> list = new ArrayList<SalebackApplyInfo>(1);
+	list.add(obj);
+	sumApplyInfoT(list, query);
+	return obj;
+} 
+
+
+public void sumApplyInfo(SalebackApplyInfo apply,SaleBackSearchBean searchBean){
+    StringBuilder sb = new StringBuilder("select count(bill.salebackmx_id)||'' c_num,sum(bill.bill_money),sum(bill.saleback_money),sum(bill.interest) from tsaleback_bill_info bill where 1=1 ");
+    if(searchBean != null){
+        if(StringUtils.isNotEmpty(searchBean.getSalebackId())){
+            sb.append("and bill.saleback_id='"+searchBean.getSalebackId()+"'");
+        }
+        if(StringUtils.isNotEmpty(searchBean.getBillClass())){
+            sb.append("and bill.bill_class='"+searchBean.getBillClass()+"'");
+        }
+        if(StringUtils.isNotEmpty(searchBean.getBillType())){
+            sb.append("and bill.bill_type='"+searchBean.getBillType()+"'");
+        }
+        if(StringUtils.isNotEmpty(searchBean.getOperStatus())){
+            sb.append("and bill.oper_status='"+searchBean.getOperStatus()+"'");
+        }
+        if(StringUtils.isNotEmpty(searchBean.getApplyOperNo())){
+            sb.append("and bill.apply_oper_no='"+searchBean.getApplyOperNo()+"'");
+        }
+        if(StringUtils.isNotEmpty(searchBean.getAuditOperNo())){
+            sb.append("and bill.audit_oper_no='"+searchBean.getAuditOperNo()+"'");
+        }
+        if(StringUtils.isNotEmpty(searchBean.getAcctOperNo())){
+            sb.append("and bill.acct_oper_no='"+searchBean.getAcctOperNo()+"'");
+        }
+       
+        if(searchBean.getOperStatus()!=null){
+            
+            sb.append("and bill.oper_status in ('"+searchBean.getOperStatus()+"')");
+        }
+    }
+    System.out.println(sb.toString());
+    IDB session = DBFactory.getDB();
+    try {
+        IData data=session.getData(sb.toString());
+        apply.setTotalNum( data.getString(1));
+        apply.setTotalMoney(MoneyUtils.moneyToString(data.getDouble(2)) );
+        apply.setActualAmount(data.getString(3));
+	    apply.setTotalInterest(data.getString(4));
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+    
+}
+
+/**
+ * 修改批次状态
+ * @param applyStatus
+ * @param salebackId
+ * @return
+ * @throws SQLException
+ */
+public int updateSaleApplyStatus(String applyStatus,String salebackId) throws SQLException{
+	IDB session = DBFactory.getDB();
+	return session.execute("update tsaleback_apply_info set apply_status=? where saleback_id=?",applyStatus,salebackId);
+}
+}

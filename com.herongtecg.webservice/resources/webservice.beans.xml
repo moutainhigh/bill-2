@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- webservice bean 
+可选配置 
+如果配置到spring容器：对应cxf的implementor值以#+beanId
+如果不配置：对应cxf的implementor值类全称（路径+类名）
+ -->
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+	
+	<bean id="elecDrwrService" class="com.herongtech.webservice.webBank.drwr.ElecDrwrService"></bean>
+	
+</beans>
+
+
+

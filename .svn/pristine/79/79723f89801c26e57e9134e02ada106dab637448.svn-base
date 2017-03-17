@@ -1,0 +1,540 @@
+<%--
+ * 文件名称: saleback_apply_bill_elec.jsp
+ * 系统名称: 票据管理平台
+ * 模块名称: 电票转入申请接收票据保存页面
+ * 软件版权: 北京合融科技有限公司
+ * 功能说明: 
+ * 系统版本: @version2.0.0.1
+ * 开发人员: sherry
+ * 开发时间: 2016-10-17
+ * 审核人员:
+ * 相关文档:
+ * 修改记录: 修改日期    修改人员    修改说明
+--%>
+<%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
+<%@ include file="/webpage/system/admin/taglib.jsp"%>
+<%
+String path = request.getContextPath();
+String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
+%>
+<!DOCTYPE html>
+<html>
+  <head>
+    <base href="<%=basePath%>">
+    <meta charset="UTF-8">
+	<title>票据管理页面</title>
+	<%@ include file="/webpage/system/admin/top.jsp"%>
+	<script type="text/javascript" src="webpage/system/addPrint/commonFunc.js"></script>
+</head>
+<body>
+	<div class="clearfix">
+		<div id="page-content" class="page-content">
+			<div id="header">
+				<form action="<%=basePath%>SalebackApplyController.do?method=toApplyDetailPagetwo" method="post" name="batchForm" id="batchForm" class="form-search">
+					<input type="hidden" name="brchNo" value="${brchNo}"/>
+					<input type="hidden" name="ids" value="${ids}"/>
+					<input type="hidden" name="salebackIdss" value="${salebackIdss}"/>
+					<input type="hidden" name="isEdit" value="0"/>
+					<input type="hidden" name="billType" value="${batch.billType}"/>
+					<input type="hidden" name="billClass" value="${batch.billClass}" />
+					<input type="hidden" name="rebuyId" value="${rebuyId}"/>
+					<input type="hidden" id="salebackId" name="salebackId" value="${batch.salebackId}"/>
+					<input type="hidden" name="newsalebackId" value="${newsalebackId}"/>
+					<input type="hidden" id="startrate" value="${fns:formateRate(batch.rate)}"/>
+					<input type="hidden" id="startinAcctNo" value="${batch.inAcctNo}"/>
+					<input type="hidden" name="startOnline"  id="startOnline" value="${batch.isOnline}"/>
+					<input type="hidden" name="startcreatedate"  id="startcreatedate" value="${batch.createDt}">
+					<input type="hidden" name="rateids"  id="rateids" value="1">
+					<%--查询区 --%>
+					<div class="row-fluid firstLine">
+						<label for="batchNo" class="pull-left control-label">批次号</label>
+						<div class="pull-left batch">${batch.batchNo}</div>
+						<label for="billType">票据类型</label>
+						<input type="text" class="input-medium" name="billType" id="billType" value="${fns:getDictLabel('K_BILL_TYPE',batch.billType)}" readonly/>
+						<label for="inAcctNo">票据品种</label>
+						<input type="text" class="input-medium" name="inAcctNo" readonly value="${fns:getDictLabel('K_BILL_CLASS',batch.billClass)}" />
+					</div>
+					<div class="row-fluid outer">
+						<label for="inAcctName">客户名称</label>
+						<input type="text" class="input-medium" name="inAcctName" value="${batch.custName}" readonly />
+						<%--<label for="inAcctName"><span style="margin:0 4px;"></span>交易对手名称</label>
+						<input type="text" class="input-medium" name="inAcctName" value="${batch.custName}" readonly />
+						</div>-->
+						<label for="inAcctName">交易对手机构号</label>
+						<input type="text" class="input-medium" name="inAcctName" value="${batch.branchNo}" readonly />
+						</div>
+						<label for="rate">利率</label>
+						<input type="text" class="input-medium" id ="rate" name="rate"  value="${fns:formateRate(batch.rate)}" onblur="checkRate();"/>
+						</div>
+					</div>
+					<div class="row-fluid outer">
+						<label for="inAcctName">账户名称</label>
+							<input type="text" class="input-medium" id="inAcctName" name="inAcctName" value="${batch.inAcctName}" readonly />
+						</div>
+						<%--<label for="inAcctType">账<span style="margin:0 6px;"></span>号<span style="margin:0 6px;"></span>类<span style="margin:0 6px;"></span>型</label>
+						<input type="text" class="input-medium" name="inAcctType" id="inAcctType" value="${batch.inAcctType}" readonly/>
+						</div>--%>
+						<label for="inAcctNo">入账账号</label>
+						<input type="text" class="input-medium" id="inAcctNo" name="inAcctNo"  value="${batch.inAcctNo}" onblur="fillAcctInfo();"/>
+						<label for="billType">清算方式</label>
+						<select class="select2 input-medium" name="Online" id="Online" onchange="changeCustType();">
+							<c:choose>			
+					   			<c:when test="${batch.isOnline=='0'}">
+					    		<option value="0" selected="true">线下清算</option>
+					    		<option value="1" >线上清算</option>
+					  		 </c:when>
+					  		 <c:when test="${batch.isOnline=='1'}">
+					   			 <option value="1" selected="true">线上清算</option>
+					   			 <option value="0" >线下清算</option>
+					  		 </c:when>
+					   		<c:otherwise>
+					    		 <option value="-1">请选择</option>
+					    		 <option value="0">线下清算</option>
+					    		 <option value="1" >线上清算</option>
+					 		</c:otherwise>			
+							</c:choose>
+							</select>	
+							<input type="hidden" name="isOnline"  id="isOnline" value="${batch.isOnline}"/>
+					</div>
+					<div class="row-fluid threeLine">
+						<label for="saleDt">返售开放日</label>
+						<input type="text" class="input-medium input-date" name="saleDt" readonly value="${batch.salebackOpenDt}"/>
+						<label for="saleType">返售截止日</label>
+						<input type="text" class="input-medium input-date" name="saleType" readonly id="saleType" value="${batch.salebackDueDt}" />
+						<label for="billType">返售日期</label>
+						<input class="input-medium input-date" name="createDt"  id="createDt" value="${batch.createDt}" type="text" placeholder="系统日期" title="请输入有效的日期 (YYYY-MM-DD)" valid="required dateISO" onclick="WdatePicker({dateFmt:'yyyy-MM-dd'});"/>
+					</div>
+					<div class="row-fluid fiveLine">
+						<label for="totalSize">合计张数</label>
+						<input type="text" class="input-medium" name="totalSize" readonly value="${batch.totalNum}" />
+						<label for="sumMoney">合计金额</label>
+						<input type="text" class="input-medium" name="sumMoney" readonly value="${fns:formateMoney(batch.totalMoney)}" />
+						<label for="rate"><span class="star">*</span>利率</label>
+						<input type="text" class="input-medium" id ="rate" name="rate"  value="${batch.rate}" onblur="checkRate();"/><span>%</span>
+					</div>
+				</form>
+			</div>
+			<%--按钮操作区--%>
+			<div id="center">
+				<form  id="btnForm">
+					<div class="row-fluid">
+						<div class="span6" id="btn-left">
+						<a class="btn-mini" onclick="trial();">利息试算</a>	
+						<a class="btn-mini" onclick="printList();">打印清单</a>
+					  	 </div>
+					   	 <div class="span6" id="btn-right">			
+							<a class="btn-mini pull-right" onclick="save();">申请提交</a>		
+							<a class="btn-mini pull-right" onclick="goHistory();">返回</a>
+					   	</div>
+				  	</div>
+				</form>
+			</div>
+			<div id="footer" class="footer">
+				<table class="table table-striped table-bordered table-hover" style="min-width:100%;max-width:1800px;width:1800px;" id="tab" cellpadding="0" cellspacing="0">
+					<thead>
+						<tr>
+						<th class="center" onclick="selectAll('zcheckbox','checkIds')">
+								<input type="checkbox" id="zcheckbox" /><span class="lbl"></span>
+							</th>
+							<th class="center">票号</th>
+							<th class="center">票据类型</th>
+							<th class="center">返售到期日</th>
+							<th class="center">票面金额</th>
+							<th class="center">出票日</th>
+							<th class="center">计息天数</th>
+							<th class="center">利息支出</th>
+							<th class="center">实收金额</th>
+							<th class="center">出票人</th>
+							<th class="center">出票人开户行行号</th>
+							<th class="center">详情</th>
+						</tr>
+					</thead>
+					<tbody id="dataBody">
+						<c:choose>
+							<c:when test="${not empty billList}">
+								<c:forEach items="${billList}" var="billList" varStatus="vs">
+									<tr>
+										<td class="center"><input type="checkbox" name="checkIds" value="${billList.salebackmxId}" onclick="getall('checkIds')" price="${billList.billMoney}"/></td>
+										<td class="center">${billList.billNo}</td>
+										<td class="center">${fns:getDictLabel('K_BILL_TYPE',billList.billType)}</td>
+										<td class="center">${billList.salebackDueDt}</td>
+										<td class="center">${fns:formateMoney(billList.billMoney)}</td>
+										<td class="center">${billList.issueDt}</td>
+										<td class="center">${billList.interestDays}</td>
+										<td class="center">${billList.interest}</td>
+										<td class="center">${fns:formateMoney(billList.salebackMoney)}</td>
+										<td class="center">${billList.remitter}</td>
+										<td class="center">${billList.remitterBankNo}</td>
+										<td class="center">
+											<a href="javascript:goDetail('${billList.rgctId}')">查看</a>
+										</td>
+								</tr>
+						</c:forEach>
+							</c:when>
+							<c:otherwise>
+								<tr>
+									<td colspan="100" class="center">没有相关数据</td>
+								</tr>
+							</c:otherwise>
+						</c:choose>
+					</tbody>
+				</table>
+			</div>
+			<div id="select-Info">
+				<div id="selectInfo"><center>暂时没有相关数据</center></div>
+			</div>
+			<form  action="#" name="dataCollectForm" method="post">
+				<t:token></t:token>
+			</form>
+			<input type="hidden" id="batchid" value="${searchBean.rebuyId}" disabled="disabled"></input>
+			<%--/列表操作区--%>
+			<div>
+				<div id="page" class="pagination">
+					<form action="<%=basePath%>SalebackApplyController.do?method=toApplyDetailPage" method="post" name="pageForm">
+						<%@ include file="/webpage/system/admin/pageFormContent.jsp"%> 
+						
+						<input type="hidden" name="rebuyId" id="rebuyId" value="${bean.rebuyId}" />
+						
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+<%@ include file="/webpage/system/admin/modalDialog.jsp"%>	
+<%@ include file="/webpage/system/admin/footer.jsp"%>
+<script>
+	$(document).ready(function() { 
+		if("${isnewcreatebatch}"=="1"){
+		document.getElementById("rate").value="";
+	}
+	if($("#rate").val()=="0.0"){
+		document.getElementById("rate").value="0";
+	}
+	var inacctno = $("#inAcctNo").val();
+	if(inacctno==""||inacctno==" "){
+		document.getElementById("inAcctName").value="";
+	}
+		$("#batchForm").validate({submitHandler:function(form){
+		       trial(form);  
+		    }
+		}); 
+	});
+	//返回上一页
+	function goHistory(){
+	var newsalebackId = "${newsalebackId}";
+		modal("#layer_loading,#image");
+			dynamicHiddenElement('dataCollectForm','newsalebackId',newsalebackId);
+			dataCollectForm.action = "<%=basePath%>SalebackApplyController.do?method=searchApplyableSalebackBatch";
+			dataCollectForm.submit();
+	}
+	//详情页面
+	function goDetail(salebackmxId){
+		var diag = new top.Dialog();
+		 diag.Drag = true;
+		 diag.Title ="详情";
+		 diag.URL = "<%=basePath%>elecBillDetailController.do?method=goDetail&rgctId="+salebackmxId;
+		 diag.Width = 930;
+		 diag.Height = 575;
+		 diag.CancelEvent = function(){ //关闭事件
+			diag.close();
+		 };
+		 diag.show();
+	}
+	//提交
+	function save(){
+	var custAcctNo = $('#inAcctNo').val();
+	var rate = $("#rate").val();
+		var startrate = $("#startrate").val();
+		var isOnline = $("#isOnline").val();
+		var result = validateData();
+		if(result != 1 ){
+			showTips("rate","利率"+result);
+			return false;
+		}
+		//返售日期比较
+		var createdt = $("#createDt").val(); //柜员所选日期
+		var startcreatedate = "${batch.createDt}"; 
+		if(createdt!=startcreatedate){
+			showTips("createDt","返售日期变更，请重新计算利息");
+			return false;
+		}
+		//检查利率是否变更
+		var nowrate=parseInt(rate,10);
+		var startrate = parseInt(startrate,10);
+		if(nowrate!=startrate){
+			showTips("rate","利率已变更，请重新试算利息");
+			return false;
+		}
+		//检查清算方式
+		var startOnline=$("#startOnline").val();
+		if(startOnline!=isOnline){
+			showTips("Online","清算方式已变更，请重新试算利息");
+			return false;
+		}
+		var startinAcctNo=$("#startinAcctNo").val();
+		var inAcctNo = $("#inAcctNo").val();
+		if(startinAcctNo!=inAcctNo){
+			showTips("inAcctNo","账号已变更，请重新试算利息");
+			return false;
+		}
+		$.ajax({
+			type: "POST",
+			url: "<%=basePath%>custInfoController.do?method=custInfo",
+	    	data: {'custAcctNo': custAcctNo},
+			dataType:'json',
+			async:false,
+			beforeSend:function(){
+				if(custAcctNo==null||custAcctNo==""){
+					showTips("inAcctNo","请输入入账账号");
+					$("#inAcctNo").val("");
+			   		return;
+				}
+			},
+			success: function(data){	
+				if(data.success){  //处理成功
+						submitapply();
+				}else{
+					$("#inAcctNo").val("");
+					showTips("inAcctNo",data.msg);
+					return;
+				}
+			}
+		});
+	}
+	function submitapply(){
+		 var checkNum = getCheckNum("checkIds");
+		  var salebackmxids = getCheckStr("checkIds"); 
+		  var salebackId = "${batch.salebackId}";
+		     if (checkNum == 0){
+		   		bootbox.alert("请先选择要进行申请的记录");
+		   		return;
+		   	 }
+	 				 $.ajax({
+							url:"SalebackApplyController.do?method=isElecInterestTrial",
+		            		data:{"salebackmxids":salebackmxids,"salebackId":salebackId},
+		            		type:"post",
+		            		dataType:"json",
+		            		async: false,
+		            		success:function(data){
+		            			if(!data.success){
+		            				
+					            	modal("#layer_loading,#image");
+					            	dynamicHiddenElement('dataCollectForm','rebuyId',$("#rebuyId").val());
+					            	dynamicHiddenElement('dataCollectForm','salebackId',salebackId);
+					            	 dynamicHiddenElement('dataCollectForm','salebackmxids',salebackmxids);
+				     				 dataCollectForm.action = "<%=basePath%>SalebackApplyController.do?method=elecsalebackapplysubmit";
+					    			 dataCollectForm.submit();
+		            			}else{
+		            			
+		            			bootbox.alert("请先试算利息");
+		            			}
+		            		},
+		            		error:function(data){
+		            			bootbox.alert("提交异常");
+		            		}	            		
+						});	            	
+	}
+	function changeCustType(){
+		var online=$("#Online").val();
+		document.getElementById("isOnline").value=online;
+	}
+	//校验转入利率
+	function checkRate(){
+		var rate = $("#rate").val();
+		var result = validateData();
+		if(result != 1 ){
+			showTips("rate","利率"+result);
+			return false;
+		}
+		return true;
+	}
+	//校验成本利率
+	//function checkCbRate(){
+	//	var cbRate = $("#cbRate").val();
+	//	var result = validateData(cbRate);
+  	//    if(result != 1 ){
+  	//   		showTips("cbRate","利率"+result);
+  	//   		return false;
+  	//    }
+  	//    return true;
+	//}
+	//校验利率
+  	//成功返回1，失败返回提示信息
+  	function validateData(){
+  	var rate=$("#rate").val();
+		var re1 =/^[0-9]+[\.]?[0-9]*$/;
+		var msg = 1;
+		if(rate == null || $.trim(rate) == "") {
+			msg = "不能为空";
+			return msg;
+		}
+		if(rate == null || $.trim(rate) == "0.0") {
+			msg = "不能为0";
+			return msg;
+		}
+		if(!re1.test(rate)){
+			msg = "只能为数字";
+			return msg;
+		}
+		if(rate<0 || rate>100){
+			msg = "利率应该大于等于0且小于等于100";
+			return msg;
+		}
+		//校验精度
+  		var array = rate.split(".",-1);
+  		if(array.length > 2){
+  		  msg = "格式不正确";
+  		  return msg;
+  		}
+		if(array[0]!=null && $.trim(array[0])!=""){
+			var intPart = array[0];
+			if("0" == intPart.substring(0,1) && intPart.length > 1){
+				msg = "格式不正确";
+	  		  	return msg; 
+			}
+		 }
+  		if(array.length==2 && array[1]!=null && $.trim(array[1])!=""){
+  			if(array[1].length>4){
+  				msg = "精确到小数点后4位";
+  				return msg;
+  			}
+  		}
+		return msg;	
+  	}
+	//利息试算校验
+	function triala(){
+	var result = checkRate();
+	if(!result){
+		return false;
+	}
+	     var checkNum = getCheckNum("checkIds");
+	     var salebackId = "${batch.salebackId}";
+	     var rebuyId=$("rebuyId").val();
+	     var rate = $("#rate").val();//利率
+	     changeCustType();
+	     var isOnline = $("#isOnline").val();//清算方式
+	     if(isOnline!="1"&&isOnline!="0"){
+	     	showTips("Online","请先选择清算方式");
+	     	return false;
+	     }
+	     //返售日期比较
+		var createdt = $("#createDt").val(); //柜员所选日期
+		var nowdate = $("#startcreatedate").val(); //当前营业日期
+		var salebackopendt = "${batch.salebackOpenDt}";//返售开放日
+		var salebackduedt = "${batch.salebackDueDt}";//返售截止日
+		if(new Date(createdt)<new Date(nowdate)){
+			showTips("createDt","返售日期不能小于当前营业日期");
+			return false;
+		}
+		if(new Date(createdt)<new Date(salebackopendt)||new Date(createdt)>new Date(salebackduedt)){
+			showTips("createDt","返售日期必须大于返售开放日小于返售截止日");
+			return false;
+		}
+	     var inAcctNo = $("#inAcctNo").val();//入账账号
+	     var salebackIdss = "${salebackIdss}";
+	     if (checkNum == 0){
+	   		bootbox.alert("请先选择要进行利息复核的记录");
+	   		return;
+	   	 }
+	   	 var billClass = "${batch.billClass}";
+	   	var salebackId="${batch.salebackId}";
+	   	var createdate = $("#createDt").val();
+		var ids = getCheckStr("checkIds"); 
+	     document.getElementById("rateids").value=ids;
+	   	 var diag = new top.Dialog();
+		 diag.Drag = true;
+		 diag.Title ="利息复核";
+		 diag.URL = "<%=basePath%>SalebackApplyController.do?method=toElecInterestTrial&salebackmxId="+ids+"&salebackId="+salebackId+"&billClass="+billClass+"&rebuyId="+rebuyId+"&isOnline="+isOnline+"&inAcctNo="+inAcctNo+"&rate="+rate+"&salebackIdss="+salebackIdss+"&createdate="+createdate;       
+		 diag.Width = 480;
+		 diag.Height = 170;
+		 diag.CancelEvent = function(){ //关闭事件
+			batchForm.submit();
+			diag.close();
+		 };
+		 diag.show(); 
+	}
+	//入账账号检查
+	function fillAcctInfo(){
+		var custAcctNo = $('#inAcctNo').val();
+		$.ajax({
+			type: "POST",
+			url: "<%=basePath%>custInfoController.do?method=custInfo",
+	    	data: {'custAcctNo': custAcctNo},
+			dataType:'json',
+			async:false,
+			beforeSend:function(){
+				if(custAcctNo==null||custAcctNo==""){
+					showTips("inAcctNo","请输入入账账号");
+					$("#inAcctNo").val("");
+			   		return false;
+				}
+			},
+			success: function(data){	
+				if(data.success){  //处理成功
+			$("#inAcctName").val(data.attributes.custName);
+						return true;
+				}else{
+					$("#inAcctNo").val("");
+					showTips("inAcctNo",data.msg);
+					return false;
+				}
+			}
+		});
+	}
+	//利息试算
+	function trial(){
+		var custAcctNo = $('#inAcctNo').val();
+		$.ajax({
+			type: "POST",
+			url: "<%=basePath%>custInfoController.do?method=custInfo",
+	    	data: {'custAcctNo': custAcctNo},
+			dataType:'json',
+			async:false,
+			beforeSend:function(){
+				if(custAcctNo==null||custAcctNo==""){
+					showTips("inAcctNo","请输入入账账号");
+					$("#inAcctNo").val("");
+			   		return false;
+				}
+			},
+			success: function(data){	
+				if(data.success){  //处理成功
+						triala();
+				}else{
+					$("#inAcctNo").val("");
+					showTips("inAcctNo",data.msg);
+					return false;
+				}
+			}
+		});
+	}
+	//打印到期返售清单
+    //operStatusString 票据状态
+	function printList(){
+		var batch_id="${batch.salebackId}";
+		var checkNum = getCheckNum("checkIds");
+	   	 if (checkNum == 0){
+	   		bootbox.alert("请先选择要打印的记录");
+	   		return;
+	   	 }   	 
+		var ids = getCheckStr("checkIds");
+		$.ajax({
+			url:"SalebackApplyController.do?method=isElecInterestTrial",
+          		data:{"salebackmxids":ids,"salebackId":$("#salebackId").val()},
+          		type:"post",
+          		dataType:"json",
+          		async: false,
+          		success:function(data){
+          			if(data.success){
+          				bootbox.alert("请先试算利息");
+          			}else{
+          				doPrint("addPrintController.do?method=doPrint&ids="+ids+"&moduleId=1050601&type=SaleBackListPrint&baid="+batch_id+"&handleType=申 请"); 	 
+          			}
+          		}            		
+		});	            	
+		
+	}
+	
+</script>
+</body>
+</html>

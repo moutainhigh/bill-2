@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 目前票据系统通过servlet自己解析cxf.xml发布webservice,但格式保持与整合spring格式一样 方便理解和以后替换（如果有需要） -->
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:jaxws="http://cxf.apache.org/jaxws"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+	http://cxf.apache.org/jaxws http://cxf.apache.org/schemas/jaxws.xsd">
+	
+	<jaxws:endpoint id="elecDrwrService"
+		implementor="#elecDrwrService"
+		address="/elecDrwrService">
+	</jaxws:endpoint>
+	<jaxws:endpoint id="elecEndotseService"
+		implementor="com.herongtech.webservice.webBank.endorse.ElecEndorseService"
+		address="/elecEndotseService">
+	</jaxws:endpoint>
+
+</beans>

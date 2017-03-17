@@ -1,0 +1,194 @@
+package com.herongtech.console.service.common.machinestatus;
+
+import java.util.ArrayList;
+import java.util.List;
+
+
+
+/**
+ * 状态流程图画图工具
+ *
+ */
+public class CreateStatusDigrph {
+    
+    private List<StatusNode> nodes=new ArrayList<StatusNode>();
+    
+    public CreateStatusDigrph(List<StatusDict> data) {
+        if (data == null) {
+            data = new ArrayList<StatusDict>();
+        }
+        for (int i = 0; i < data.size(); i++) {
+            StatusNode node = new StatusNode(data.get(i));
+            nodes.add(node);
+        }
+    }
+    
+    
+    public List<StatusNode> getNodes() {
+        return nodes;
+    }
+
+    
+    /**
+     * 
+     * 寻找当前节点的父节点
+     * @param data 集合数据
+     * @param node 当前节点
+     * @return  父节点集合
+     */
+    public void searchParentByNode(List<StatusNode> data, StatusNode node) {
+        String perSts = node.getData().getPreviousStatus();/* 获得当前节点的上一步状态 */
+        if(perSts == null || perSts.length() == 0)
+            return;
+        for (int i = 0; i < data.size(); i++) {
+            StatusDict sts = data.get(i).getData();
+            /* 判断当前节点是否是要找的父节点 */
+            if (perSts.equals(sts.getCurStatus())) {
+                node.setParentNode(data.get(i));
+            }
+        }
+    }
+
+    /**
+     * 寻找当前节点的子节点
+     * @param data  集合数据
+     * @param node  当前节点
+     * @return  子节点集合
+     */
+    public void searchChildByNode(List<StatusNode> data, StatusNode node) {
+        String curSts = node.getData().getCurStatus();/* 获得当前节点的编号 */
+        for (int i = 0; i < data.size(); i++) {
+            StatusDict sts = (data.get(i)).getData();
+            /* 判断当前节点是否是要找的父节点 */
+            if (curSts.equals(sts.getPreviousStatus())) {
+                node.getChildNodes().add(data.get(i));
+            }
+        }
+    }
+    
+    
+    /**
+     * 根据当前节点搜索头节点
+     * @param list  集合数据
+     * @param node  当前节点
+     * @return 开始节点节点
+     */
+    public StatusNode searchStartNodes( StatusNode node) {
+        if (node.getParentNode() != null) {
+              return  this.searchStartNodes(node.getParentNode());
+        } else {
+            return node;
+        }
+    }
+
+    /**
+     * 根据当前节点搜索尾节点
+     * @param list  尾节点的集合
+     * @param node  当前节点
+     * @return
+     */
+    public void searchEndNodes(List<StatusNode> list, StatusNode node) {
+        if (list == null) {
+            return;
+        }
+        if (node.getChildNodes().size() != 0) {
+            for (int i = 0; i < node.getChildNodes().size(); i++) {
+                this.searchEndNodes(list, node.getChildNodes().get(i));
+            }
+        } else {
+            list.add(node);
+        }
+    }
+
+    public StatusNode searchNodeByStep(StatusNode node,int count,int step){
+        if(count<step){
+            if(node.getParentNode() != null){
+                searchNodeByStep(node.getParentNode(), count+1, step);
+            }
+           
+        }
+        
+        return node;
+    }
+    
+    private void create(int i){
+        if(i<nodes.size()){
+            StatusNode node=nodes.get(i);
+            searchParentByNode(nodes, node);
+            searchChildByNode(nodes, node);
+            this.create(i + 1);
+        }
+    }
+    /**
+     * 此方法画的是头结点
+     * @param codeStatus
+     * @return
+     */
+    public String createDigrh(String codeStatus){
+        /* 获取节点集合中的第一个节点 */
+        StatusNode firshNode = (StatusNode) getNodes().get(0);
+        /* 建立图 */
+        create(0);
+        /* 获取头节点集合 */
+        StatusNode rootNode = searchStartNodes(firshNode);
+        Rect rect=new Rect(100, 100, 100, 45);
+        rootNode.setRect(rect);
+        rootNode.setNodeNo(0);
+        StringBuffer htmlBuf = new StringBuffer();
+        htmlBuf.append("shapes[0] =r.rect(").append(rect.left).append(", ").append(rect.top+80).append(", ")
+        .append(rect.width).append(", ").append(rect.hight).append(", 4);");
+        htmlBuf.append("$(\"#test").append(rootNode.getData().getCurStatus()+"_"+rootNode.getData().getPreviousStatus()).append("\").offset({ top: ").append(rect.top).append(" + 200, left: ").append(rect.left).append(" + 24 });");
+        htmlBuf.append("var color = Raphael.getColor();");
+        if(codeStatus.equals(rootNode.getData().getCurStatus())){
+        	htmlBuf.append("shapes[0].attr({ fill: \"pink\", stroke: \"#DFF3F4\", \"fill-opacity\": 1, \"stroke-width\": 2, cursor: \"pointer\" });");
+        }else{
+        	htmlBuf.append("shapes[0].attr({ fill: \"#E1F3F5\", stroke: \"#DFF3F4\", \"fill-opacity\": 1, \"stroke-width\": 2, cursor: \"pointer\" });");
+        }
+        htmlBuf.append("shapes[0].id = 0 + 1;");
+        htmlBuf.append("shapes[0].dblclick(function () { alert(this.id) });");
+        //图数据转化成对应的html标签描述的图形 
+        dataTranferMap(rootNode, htmlBuf,codeStatus);
+        return htmlBuf.toString();
+    }
+    /**
+     * 此方法画的是流程图的骨架
+     * @param codeStatus
+     * @return
+     */
+    private void dataTranferMap(StatusNode node,StringBuffer htmlBuf, String codeStatus){
+        if(node.getChildNum()>0){
+            int left=node.getRect().left+160;
+            int baseTop=0;
+            if(node.getChildNum()==1){
+                baseTop=node.getRect().top;
+            }else{
+                baseTop=node.getRect().top-50;//如果要精确可 用子节点数除以2再计算角度画线（即计算90度角内画几根线）
+            }
+            for(int i=0;i<node.getChildNum();i++){
+                StatusNode childNode=node.getChildNodes().get(i);
+                Rect rect=new Rect(left, baseTop+(i*100), node.getRect().width, node.getRect().hight);
+                childNode.setRect(rect);
+                childNode.setNodeNo(node.getNodeNo()+node.getChildNum()-i);
+                htmlBuf.append("shapes[").append(childNode.getNodeNo()).append("] =r.rect(").append(left).append(",").append(rect.top+80).append(", ").append(rect.width).append(", ").append(rect.hight).append(", 8);");
+                htmlBuf.append("$(\"#test").append(childNode.getData().getCurStatus()+"_"+childNode.getData().getPreviousStatus()).append("\").offset({ top: ").append(rect.top).append(" + 200, left: ").append(rect.left).append(" + 36 });");
+                htmlBuf.append("var color = Raphael.getColor();");            
+                if(childNode.getData().getCurStatus().equals(codeStatus)){
+                	htmlBuf.append("shapes[").append(childNode.getNodeNo()).append("].attr({  fill: \"pink\", stroke: \"#DFF3F4\", \"fill-opacity\": 1, \"stroke-width\": 2, cursor: \"pointer\"});");
+                }else{
+                	htmlBuf.append("shapes[").append(childNode.getNodeNo()).append("].attr({ fill: \"#E1F3F5\", stroke: \"#DFF3F4\", \"fill-opacity\": 1, \"stroke-width\": 2, cursor: \"pointer\" });");
+                }
+                htmlBuf.append("shapes[").append(childNode.getNodeNo()).append("].id = ").append(childNode.getNodeNo()).append(" + 1;");
+                htmlBuf.append("shapes[").append(childNode.getNodeNo()).append("].dblclick(function () { alert(\"hello\") });");
+                htmlBuf.append("connections.push(r.drawArr({ obj1: shapes[").append(node.getNodeNo()).append("], obj2: shapes[").append(childNode.getNodeNo()).append("] }));");                
+                String backStep=childNode.getData().getCanBack();
+                if(!"0".equals(backStep)){
+                    int step=Integer.parseInt(backStep);
+                    StatusNode backNode=searchNodeByStep(node, 0, step);
+                 
+                    htmlBuf.append("connections.push(r.drawBackArr({ obj1: shapes[").append(childNode.getNodeNo()).append("], obj2: shapes[").append(backNode.getNodeNo()).append("] }));");
+                }
+                dataTranferMap(childNode, htmlBuf,codeStatus);
+            }
+        }
+    } 
+}

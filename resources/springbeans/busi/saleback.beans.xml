@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+	
+	<bean id="SaleBackService"
+		class="com.herongtech.console.service.busiservice.saleback.SaleBackService"  lazy-init="true">
+	</bean>
+	
+	<bean id="rpdRediscountDraftCallback"
+		class="com.herongtech.console.service.busiservice.saleback.RpdRediscountDraftCallback"  lazy-init="true">
+	</bean>
+	
+	<bean id="SaleBackDraftCallback"
+		class="com.herongtech.console.service.busiservice.saleback.SaleBackDraftCallback"  lazy-init="true">
+	</bean>
+	
+	<bean id="SalebackAuditTrigger"
+		class="com.herongtech.console.service.busiservice.saleback.SalebackAuditTrigger"  lazy-init="true">
+		<property name="service" ref="SaleBackService"></property>
+	</bean>
+	
+	<bean id="OverdueBillServiceRediscountDraftCallback"
+		class="com.herongtech.console.service.busiservice.saleback.OverdueBillServiceRediscountDraftCallback"  lazy-init="true">
+	</bean>
+	
+</beans>
+
+
+
+

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<taglib xmlns="http://java.sun.com/xml/ns/j2ee"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-jsptaglibrary_2_0.xsd"
+  version="2.0">
+    
+  <description>JSTL 1.1 functions library</description>
+  <display-name>JSTL functions sys</display-name>
+  <tlib-version>1.1</tlib-version>
+  <short-name>fns</short-name>
+  <uri>http://java.sun.com/jsp/jstl/functionss</uri>
+  
+  <!-- DictUtils -->
+  <function>
+    <description>获取字典标签</description>
+    <name>getDictLabel</name>
+    <function-class>com.herongtech.console.core.util.DictUtils</function-class>
+    <function-signature>java.lang.String getDictLabel(java.lang.String, java.lang.String)</function-signature>
+    <example>${fns:getDictLabel(dictGroup, itemCode)}</example>  
+  </function>
+  
+  <function>
+    <description>获取表信息标签</description>
+    <name>getTableLabel</name>
+    <function-class>com.herongtech.console.core.util.TableUtils</function-class>
+    <function-signature>java.lang.String getTableLabel(java.lang.String,java.lang.String, java.lang.String,java.lang.String)</function-signature>
+    <example>${fns:getTableLabel('tproduct','prod_no','prod_name','001003002')}</example>  
+  </function>
+  
+    <function>
+    <description>金额千分位</description>
+    <name>formateMoney</name>
+    <function-class>com.herongtech.console.core.util.MoneyUtils</function-class>
+    <function-signature>java.lang.String doubleToFormatStr(java.lang.Double)</function-signature>
+    <example>${fns:formateMoney(disc.totalMoney)}</example>  
+  </function>
+  
+  <function>
+    <description>数字格式化</description>
+    <name>double2String</name>
+    <function-class>com.herongtech.console.core.util.MoneyUtils</function-class>
+    <function-signature>java.lang.String double2String(double)</function-signature>
+    <example>${fns:double2String(disc.totalMoney)}</example>  
+  </function>
+  
+  
+  
+   <function>
+    <description>格式化利率</description>
+    <name>formateRate</name>
+    <function-class>com.herongtech.console.core.util.MoneyUtils</function-class>
+    <function-signature>java.lang.Double formateRate(java.lang.Double)</function-signature>
+    <example>${fns:formateRate(batch.rate)}</example>  
+  </function>
+  
+  
+  
+  
+  
+  
+</taglib>

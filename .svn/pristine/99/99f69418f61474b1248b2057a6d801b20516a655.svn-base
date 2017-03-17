@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+	
+	<bean id="DiscService"
+		class="com.herongtech.console.service.busiservice.disc.DiscService"  lazy-init="true">
+	</bean>
+	
+	<bean id="DiscDraftCallback"
+		class="com.herongtech.console.service.busiservice.disc.DiscDraftCallback"  lazy-init="true">
+	</bean>
+	
+	<bean id="discAuditTrigger"
+		class="com.herongtech.console.service.busiservice.disc.DiscAuditTrigger"  lazy-init="true">
+		<property name="discService" ref="DiscService"></property>
+	</bean>
+	<bean id="DiscFacService"
+		class="com.herongtech.console.service.busiservice.disc.DiscFacService"  lazy-init="true">
+	</bean>
+	
+</beans>
+
+
+

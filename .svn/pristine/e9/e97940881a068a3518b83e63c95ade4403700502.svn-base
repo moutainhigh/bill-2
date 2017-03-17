@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+	
+	<bean id="UserService"
+		class="com.herongtech.console.service.user.UserService"  lazy-init="true" >
+	</bean>
+	
+	<bean id="SystemService"
+		class="com.herongtech.console.service.system.SystemService"  lazy-init="true" >
+	</bean>
+	
+	<bean id="MenuService"
+		class="com.herongtech.console.service.menu.MenuService"  lazy-init="true" >
+	</bean>
+	
+	<bean id="SysConfig"
+		class="com.herongtech.appconfig.impl.SysConfig"  lazy-init="false" init-method="init" scope="singleton">
+	</bean>
+	
+	<bean id="ParamService"
+		class="com.herongtech.console.service.param.ParamService"  lazy-init="true">
+	</bean>
+	
+	<bean id="SerialnoService"
+		class="com.herongtech.console.service.serialno.SerialnoService"  lazy-init="true">
+	</bean>
+	
+	<bean id="DictService"
+		class="com.herongtech.console.service.dict.DictService"  lazy-init="true">
+	</bean>
+	
+	<bean id="CacheService"
+		class="com.herongtech.console.service.cache.CacheService"  lazy-init="true">
+	</bean>
+	
+	<bean id="BusiDateService"
+		class="com.herongtech.console.service.busidate.BusiDateService"  lazy-init="true">
+	</bean>
+	
+	<bean id="BranchService"
+		class="com.herongtech.console.service.branch.BranchService"  lazy-init="true">
+	</bean>
+	
+	<bean id="LogsService"
+		class="com.herongtech.console.service.logs.LogsService"  lazy-init="true">
+	</bean>
+	
+	<bean id="OperationService"
+		class="com.herongtech.console.service.operation.OperationService"  lazy-init="true">
+	</bean>
+	
+	<bean id="BusiBranchService"
+		class="com.herongtech.console.service.busibranch.BusiBranchService"  lazy-init="true">
+	</bean>
+	
+	<bean id="RoleService"
+		class="com.herongtech.console.service.role.RoleService"  lazy-init="true">
+	</bean>
+
+	<bean id="RoleMenuService"
+		class="com.herongtech.console.service.rolemenu.RoleMenuService"  lazy-init="true">
+	</bean>
+	
+	<bean id="SequenceService"
+		class="com.herongtech.console.service.sequence.SequenceService"  lazy-init="true">
+	</bean>
+	
+
+	<bean id="ProductService"
+		class="com.herongtech.console.service.common.product.ProductService"  lazy-init="true">
+	</bean>
+	
+	<bean id="CommonService"
+		class="com.herongtech.console.service.busiservice.common.CommonService"  lazy-init="true">
+	</bean>
+	
+	<bean id="RiskBillCheckService"
+		class="com.herongtech.console.service.riskbill.RiskBillCheckService"  lazy-init="true">
+	</bean>
+	
+	<!-- 客户余额 -->
+	<bean id="CustLimitService"
+		class="com.herongtech.console.service.custlimit.CustLimitService"  lazy-init="true">
+	</bean>
+	
+	<!-- 客户余额 -->
+	<bean id="CustLimitFlowService"
+		class="com.herongtech.console.service.custlimit.CustLimitFlowService"  lazy-init="true">
+	</bean>
+	<!-- 客户余额代理 -->
+	<bean id="FmsAgentService"
+		class="com.herongtech.console.service.busiservice.common.FmsAgentServiceImpl"  lazy-init="true">
+	</bean>
+	
+	<!-- 客户余额代理 -->
+	<bean id="FacCreateFlowService"
+		class="com.herongtech.console.service.busiservice.common.FacCreateFlowServiceImpl"  lazy-init="true">
+	</bean>
+	
+	<bean id="FacRenewService"
+		class="com.herongtech.console.service.common.fac.FacRenewService"  lazy-init="true">
+	</bean>
+	<bean id="EntityDraftRegisterService"
+		class="com.herongtech.console.service.common.entitydraftregister.EntityDraftRegisterService"  lazy-init="true">
+	</bean>
+	
+	<bean id="UserContextMenuService"
+		class="com.herongtech.console.service.userContextMenu.UserContextMenuService"  lazy-init="true" >
+	</bean>
+	
+</beans>
+
+
+

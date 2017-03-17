@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 测试 -->
+<application>
+    <application-properties>
+        <property name="BASE_PACKAGE" value="com.herongtech"/>
+        <property name="DEBUG_MODE" value="true"/>
+        <!-- 如果没有指定语言或指定语言的内容找不到，则从默认语言查找 -->
+        <property name="POSE_DEFAULT_LOCALE" value="zh_CN"/>
+    </application-properties>
+
+    <application-processors>
+        <application-processor bean="fileResolverProcessor"></application-processor>
+        <application-processor bean="fileMonitorProcessor"></application-processor>
+        
+        <!-- 业务处理插件 -->
+		<application-processor bean="serviceApplicationProcessor"></application-processor>
+		<!-- 本地业务处理插件 -->
+		<application-processor bean="localServiceProcessor"></application-processor>
+        <!-- xml插件 -->
+       	<application-processor bean="xmlChannelProcessor"></application-processor>
+		<!-- 定时任务插件 -->
+		 <application-processor bean="autoClearProcessor"></application-processor> 
+		<!-- mq通道插件 -->
+		<application-processor bean="mqChannelProcessor"></application-processor>
+		<!-- db插件 -->
+		<application-processor bean="dbProcessor"></application-processor>
+		
+		 <!-- 调用核心插件 -->
+       	<application-processor bean="coreChannelProcessor"></application-processor>
+       	<!-- 调用信贷插件 -->
+       	<application-processor bean="creditChannelProcessor"></application-processor>
+    </application-processors>
+
+    <!-- 这里是文件搜索器相关配置，如果配置请参考file-resolver-configuration配置手册 -->
+    <file-resolver-configuration
+            resolve-classpath="true">
+        <class-paths>
+        </class-paths>
+        <include-patterns>
+            <include-pattern pattern="com\.herongtech\.(.)*\.jar"/>
+        </include-patterns>
+        <full-context-file-finder>
+        </full-context-file-finder>
+    </file-resolver-configuration>
+
+    <plugin-management>
+        <plugin-configs>
+            <plugin-config plugin-id="service" plugin-version="1.0">
+                <aop-config position="before" bean="serviceParamValidate"
+                            enable="false"/>
+            </plugin-config>
+        </plugin-configs>
+    </plugin-management>
+
+    <!-- aop配置 -->
+    <cepcore-aop-config>
+        <!-- <aop-config position="before-local" bean="requestParamValidate"></aop-config> -->
+    </cepcore-aop-config>
+
+    <!-- 异常处理配置 -->
+    <exception-config>
+        <exception-handlers>
+            <!--<exception-handler exception="异常类名全路径" handler="异常对应的ExceptionHandler的beanId"/> -->
+        </exception-handlers>
+    </exception-config>
+   
+    <!--文件监控器配置参数，具体参见FileMonitorProcessor配置管理手册，interrupt扫描间隔时间，单位秒 -->
+    <file-monitor interval="10" enable="false"/>
+    
+	<service-interface>
+		<class-name-regular pattern=".*"></class-name-regular>
+	</service-interface>
+	
+	<!-- 本地服务接口正则配置 -->
+	<localservice_processor>
+		<args routetable="10*;11*;20*;12*;13*;Proc*;DAYEND*;"/>
+	</localservice_processor>
+
+	<!-- 定时任务插件配置
+		type:定时类型
+		poolSize:调度池大小
+		delay:启动后开始轮询时间
+		period:间隔
+		processor：轮询任务处理类
+	-->
+	
+	<autoClearService-config>
+		<args type="2" poolSize="1" delay="60" period="30"
+			processor="com.herongtech.console.service.common.dayend.BatchAutoProcessor" />
+	</autoClearService-config>
+	 
+
+	<!-- spring插件配置-->
+	<spring-config>
+		<args xmlFileName="classpath:SpringContext.xml" />
+	</spring-config>
+	
+	<!-- db插件配置-->
+	<db-config>
+		<args xmlFileName="db-db2config.xml" />
+	</db-config>
+
+	<!-- XML通道配置-->
+	<xmlchannel-config>
+		<args timeout="60000" serverPort="7900" enableServer="true"
+			jdkThreadPool="false" remoteIP="127.0.0.1" remotePort="7900"
+			corePoolSize="30" maxNumPoolSize="50" keepAliveTime="300"
+			waitTaskQueeSize="30" backlog="30" charset="utf-8" callRemotePoolSize="15"
+			callRemoteQueueSize="30" localIp="" routetable="D*" />
+	</xmlchannel-config>
+	
+	<!-- mq通道配置-->
+	  <mqchannel-config>
+		<args concurrentConsumers="1" maxConcurrentConsumers="1" mqUsername="mqm"
+			mqUserpwd="herong@88" ccpcInQueueName="3051000001_6" ccpcInRealtimeQueueName="3051000001_5"
+			mbOutQueueName="3051000001_4" mbOutRealtimeQueueName="3051000001_3" mqQueueManagerName="QMEMBFE"
+			mqHostname="192.168.1.2" mqPort="1417" mqCcsid="819" mqChannel="SYSTEM.DEF.SVRCONN"
+			listenSwitch="0" routetable="ECDS*" />
+	</mqchannel-config>
+	
+	<!-- 核心系统配置-->
+	<corechannel-config>
+		<args timeout="60000"  remoteIP="127.0.0.1" remotePort="7900"
+			 charset="utf-8"  routetable="CORE*" />
+	</corechannel-config>
+	
+	<creditchannel-config>
+		<args timeout="60000"  remoteIP="127.0.0.1" remotePort="7900"
+			 charset="utf-8"  routetable="CREDIT*" />
+	</creditchannel-config>
+
+</application>

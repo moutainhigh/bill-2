@@ -1,0 +1,33 @@
+﻿<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>精美js日期选择器，js省市选择器 | www.97zzw.com 97站长网</title>
+    <!-- <link type="text/css" rel="Stylesheet" href="styles/main.css" /> -->
+    <script type="text/javascript" language="javascript" src="../scripts/jquery.js"></script>
+    <script type="text/javascript" language="javascript" src="../scripts/eye-base.js"></script>
+    <script type="text/javascript" language="javascript" src="../scripts/eye-all.js"></script>
+</head>
+<body>
+    <!-- <p><b>日期控件：</b></p>
+    <p>如果...</p>
+    <p>你想要一个小巧的js日期选择器。 </p>
+    <p>你需要一个精美的js日期选择器。 </p>
+    <p>你需要一个支持鼠标滚动的js日期选择器。</p>
+    <p>你想要一行代码就可以加载的js日期选择器。</p>
+    <p>你需要广泛兼容多浏览器的js日期选择器（跨浏览器设计， </p>
+    <p>通过IE6、IE7、IE8、Firefox、Chrome、Opera等浏览器测试）。</p>
+    <p>它就在这里...</p> -->
+    <p>点击文本框选择日期：</p>
+    <p><input type="text"  onClick="eye.datePicker.show(this);" /></p>
+      <p><input type="text"  onClick="eye.datePicker.show(this);" /></p>
+    <br />
+    <p><b>省市选择器：</b></p>
+   <!--  <p>如果...</p>
+   <p>你需要一个精美的js省市选择选择器。 </p>
+   <p>你想要一行代码就可以加载的js省市选择选择器。</p>
+   <p>你需要广泛兼容多浏览器的js省市选择选择器（跨浏览器设计， </p>
+   <p>通过IE6、IE7、IE8、Firefox、Chrome、Opera等浏览器测试）。</p>
+   <p>它就在这里...</p> -->
+    <p>点击文本框选择省市：</p>
+    <p><input type="text" style="width: 80px;" id="fromProvince" onClick="eye.selectCity.show(this, 'fromCity');" /><input type="text" style="width: 80px;" id="fromCity" onClick="eye.selectCity.show('fromProvince', this);" /></p>
+</body>
+</html>

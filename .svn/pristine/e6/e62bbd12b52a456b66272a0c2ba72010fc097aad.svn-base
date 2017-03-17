@@ -1,0 +1,20 @@
+<tokens>
+	<!-- 贴现申请提交 -->
+	<token url="/bbsp/discApplyController.do?apply" />
+	
+	
+	<!-- 转贴现转入申请提交 -->
+	<token url="/bbsp/rebuyApplyController.do?applySubmit" />
+	<!-- 转贴现转入撤销申请提交 -->
+	<token url="/bbsp/rebuyApplyController.do?revokeApply" />
+	<!-- 转贴现转入审核提交 -->
+	<token url="/bbsp/rebuyAuditController.do?auditSubmit" />
+	<!-- 转贴现转入撤销审核提交 -->
+	<token url="/bbsp/rebuyAuditController.do?revokeAudit" />
+	<!-- 转贴现转入记账提交 -->
+	<token url="/bbsp/rebuyAccountController.do?accountSubmit" />
+	<!-- 转贴现转入撤销记账提交 -->
+	<token url="/bbsp/rebuyAccountController.do?revokeAccount" />
+	<!-- 转贴现转入入库提交 -->
+	<token url="/bbsp/rebuyStorageController.do?storageSubmit" />
+</tokens>

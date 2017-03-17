@@ -1,0 +1,777 @@
+package com.herongtech.console.web.busicontroller.saleback;
+
+import java.sql.SQLException;
+import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.cxf.binding.corba.wsdl.Array;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
+
+import com.herongtech.console.core.common.json.AjaxJson;
+import com.herongtech.console.core.common.json.Page;
+import com.herongtech.console.core.constant.IConstants;
+import com.herongtech.console.core.constant.IDict;
+import com.herongtech.console.core.controller.BaseController;
+import com.herongtech.console.core.util.DateTimeUtil;
+import com.herongtech.console.core.util.MoneyUtils;
+import com.herongtech.console.core.util.ResourceUtil;
+import com.herongtech.console.core.util.StatusUtils;
+import com.herongtech.console.domain.bean.UserLoginfo;
+import com.herongtech.console.domain.disc.bean.DiscSearchBean;
+import com.herongtech.console.domain.rebuy.bean.RebuyApplyInfo;
+import com.herongtech.console.domain.rebuy.bean.RebuySearchBean;
+import com.herongtech.console.domain.sale.bean.SaleBillInfo;
+import com.herongtech.console.domain.saleback.bean.SaleBackSearchBean;
+import com.herongtech.console.domain.saleback.bean.SalebackApplyInfo;
+import com.herongtech.console.domain.saleback.bean.SalebackBillInfo;
+import com.herongtech.console.service.ServiceFactory;
+import com.herongtech.console.service.busiservice.sale.ISaleService;
+import com.herongtech.console.service.interfaces.ISaleBackService;
+import com.herongtech.console.service.interfaces.ISequenceService;
+import com.herongtech.console.service.interfaces.ISerialnoService;
+import com.herongtech.console.web.busicontroller.common.SalebackCodeConst;
+import com.herongtech.db.impl.session.DBFactory;
+import com.herongtech.db.interfaces.IDB;
+import com.herongtech.exception.impl.BizAppException;
+import com.herongtech.log.CommonLog;
+import com.herongtech.sysconstant.ISysErrorNo;
+import com.ibm.disthub2.impl.security.MsgUtil;
+
+/**
+ * 返售申请Controller
+ *
+ */
+@Scope("prototype")
+@Controller
+@RequestMapping("/SalebackApplyController")
+public class SalebackApplyController extends BaseController {
+
+	private ISaleBackService service = ServiceFactory.getSaleBackService();
+	/**
+	 * 可进行返售申请的票据批次查询
+	 * @return
+	 * @throws BizAppException 
+	 */
+	@RequestMapping(params="method=searchApplyableSalebackBatch")
+	public ModelAndView searchApplyableSalebackBatch(Page page,String newsalebackId,SaleBackSearchBean query) throws BizAppException{
+		page.activeCommand();
+		ModelAndView mv = new ModelAndView("busi/saleback/electronic/saleback_apply_batch_elec");
+		List<RebuyApplyInfo> batchList = new ArrayList<RebuyApplyInfo>();
+		ISaleBackService service = ServiceFactory.getSaleBackService();
+		
+		try {
+			batchList = service.getRebuyApplyInfoBydisctypeandnowdate(page, query);
+		} catch (Exception e) {
+			CommonLog.getCommonLogCache().errorMessage("批次列表查询失败");
+			throw new BizAppException("批次列表查询失败,"+e.getMessage());
+		}
+		//page.setTotalResult(batchList.size());
+		mv.addObject("discType",SalebackCodeConst.SALEBACK_BACKBUY);//回购式
+		mv.addObject("custType",IConstants.Zero);//客户类型    ：同业间
+		mv.addObject("billClass",SalebackCodeConst.SALEBACK_ELEC);//电票
+		mv.addObject("batchList",batchList);
+		mv.addObject("newsalebackId",newsalebackId);
+		mv.addObject("bean", query);
+		mv.addObject("page", page);
+		return mv;
+	}
+	
+	/**
+	 * 跳转到返售申请明细页面
+	 * @return
+	 * @throws Exception 
+	 */
+	@RequestMapping(params="method=toApplyDetailPage")
+	public ModelAndView toApplyDetailPage(Page page,SaleBackSearchBean bean,String newsalebackId,String iscancel,String rateids) throws Exception{
+		ModelAndView mv = new ModelAndView("busi/saleback/electronic/saleback_apply_bill_elec");
+		ISaleBackService salebackService = ServiceFactory.getSaleBackService();
+        IDB session = DBFactory.getDB(); // 获取数据库连接
+		try {		
+			session.beginTransaction();
+			page.activeCommand();
+			List<RebuyApplyInfo> rebuylist = salebackService.getRebuyApplyInfoBydisctypeandnowdatetwo(page,bean);	
+		    RebuyApplyInfo apply=rebuylist.get(0);
+			SalebackApplyInfo batch = salebackService.saveConditionForAddSalebackApplyInfoAndModifySalebackBillInfo(bean.getRebuyId(),newsalebackId,iscancel);//生成批次
+			mv.addObject("isnewcreatebatch", salebackService.isnewcreatebatch(bean.getRebuyId(), newsalebackId, iscancel));
+			List<SalebackBillInfo> billlist = salebackService.getSalebackBillInfolist(page,bean,iscancel,rateids);	
+			//page.setTotalResult(billlist.size());
+			mv.addObject("salebackIdss", salebackService.getallids(billlist));
+			mv.addObject("rebuyId",bean.getRebuyId());
+			mv.addObject("batch",salebackService.copyrebuytosalebackapply(batch,apply));
+			mv.addObject("newsalebackId",batch.getSalebackId());
+			mv.addObject("billList",billlist);
+			mv.addObject("bean",bean);
+			mv.addObject("page",page);
+			session.endTransaction();
+		} catch (BizAppException e) {
+			throw new BizAppException(ISysErrorNo.ERR_DBERR, "查询失败");
+		} catch (SQLException e) {
+			try {
+				session.rollback();
+			} catch (SQLException e1) {
+				
+				e1.printStackTrace();
+			}
+			CommonLog.getCommonLogCache().errorMessage("查询清单失败");
+			throw new BizAppException("查询清单失败，"+e.getMessage());
+		}
+		
+		return mv;
+	}
+	
+	
+	/**
+	 * 跳转到返售申请明细页面(算完利息或提交完成所调用)
+	 * @return
+	 * @throws Exception 
+	 */
+	@RequestMapping(params="method=toApplyDetailPagetwo")
+	public ModelAndView toApplyDetailPagetwo(Page page,String salebackId,String newsalebackId,String rateids,String rebuyId) throws Exception{
+		ModelAndView mv = new ModelAndView("busi/saleback/electronic/saleback_apply_bill_electwo");
+		ISaleBackService salebackService = ServiceFactory.getSaleBackService();
+        IDB session = DBFactory.getDB(); // 获取数据库连接
+        SalebackApplyInfo salebackapply =null;
+        page.activeCommand();
+		try {
+//			session.beginTransaction();
+			salebackapply=salebackService.getSalebackApplyInfo(page,salebackId);
+			List<SalebackBillInfo> salebacklist = salebackService.getSaleBackBillListForBatchtwo(page,salebackId,rateids,rebuyId);
+				if(null==salebacklist||salebacklist.size()<=0){
+					return searchApplyableSalebackBatch(page,salebackId,new SaleBackSearchBean());
+				}			
+			mv.addObject("salebackIdss", salebackService.getallids(salebacklist));
+			mv.addObject("batch",salebackapply);
+			mv.addObject("billList",salebacklist);
+			mv.addObject("rateids", rateids);
+			mv.addObject("rebuyId",rebuyId);
+			mv.addObject("salebackId",salebackId);
+			mv.addObject("newsalebackId",newsalebackId);
+			mv.addObject("page",page);
+		} catch (BizAppException e) {
+			throw new BizAppException(ISysErrorNo.ERR_DBERR, "查询失败");
+		} catch (SQLException e) {
+			try {
+				session.rollback();
+			} catch (SQLException e1) {
+			
+				e1.printStackTrace();
+			}
+			CommonLog.getCommonLogCache().errorMessage("查询清单失败");
+			throw new BizAppException("查询清单失败，"+e.getMessage());
+		}
+		
+		return mv;
+	}
+	/**
+	 * 去电票利息试算页面
+	 * 
+	 * @param request
+	 * @return
+	 * @throws BizAppException 
+	 * @throws BizAppException
+	 * @throws ParseException 
+	 */
+	@RequestMapping(params = "method=toElecInterestTrial")
+	public ModelAndView toElecInterestTrial(SaleBackSearchBean bean,String salebackIdss,String createdate) throws BizAppException {
+		ModelAndView mv = new ModelAndView();
+		mv.setViewName("busi/saleback/electronic/saleback_elec_interest_trial");
+		mv.addObject("inAcctNo",bean.getInAcctNo());
+		mv.addObject("isOnline",bean.getIsOnline());
+		mv.addObject("rate",bean.getRate());
+		mv.addObject("rebuyId",bean.getRebuyId());
+		mv.addObject("billClass",bean.getBillClass());
+		mv.addObject("salebackmxId", bean.getSalebackmxId());
+		mv.addObject("salebackId", bean.getSalebackId());
+		mv.addObject("createdate", createdate);
+		return mv;
+	}
+	
+	/**
+	 * 利息试算---批量试算
+	 * @param req
+	 * @param response
+	 * @return
+	 * @throws BizAppException
+	 * @throws SQLException
+	 * @throws ParseException
+	 */
+	@RequestMapping(params = "method=interestTrial")
+	public ModelAndView interestTrial(SaleBackSearchBean bean) throws BizAppException{
+		ModelAndView mv = new ModelAndView();
+		IDB session = DBFactory.getDB(); // 获取数据库连接
+		ISaleBackService saleService = ServiceFactory.getSaleBackService();
+		try {
+			session.beginTransaction();
+			saleService.interestTrial(bean);
+			session.endTransaction();
+		}catch (Exception e) {
+			e.printStackTrace();
+			try {
+				session.rollback();
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			}
+			CommonLog.getCommonLogCache().errorMessage("利息试算失败");
+			throw new BizAppException("利息试算失败，"+e.getMessage());
+		}
+		mv.addObject("msg","success");
+		mv.setViewName("save_result");
+		
+		return mv;
+	}
+	
+	/**
+	 * 判断是否利息试算
+	 * @param salebackmxids
+	 * @return
+	 * @throws BizAppException 
+	 */
+	@RequestMapping(params="method=isElecInterestTrial")
+	@ResponseBody
+	public AjaxJson isElecInterestTrial(String salebackmxids,String salebackId) throws BizAppException{
+		AjaxJson aj = new AjaxJson();
+		ISaleBackService service = ServiceFactory.getSaleBackService();
+		boolean result = false;
+		try {
+			result = service.getSalebackBillInfolistbysalebackmxIds(salebackmxids,salebackId);
+		} catch (SQLException e) {
+	
+			e.printStackTrace();
+		}
+		aj.setSuccess(result);
+		aj.setMsg("请进行利息试算");
+		return aj;
+	}
+	
+
+	
+	
+	/**
+	 * 电票返售申请提交
+	 * @return
+	 * @throws Exception 
+	 */
+	@RequestMapping(params="method=elecsalebackapplysubmit")
+	public ModelAndView elecsalebackapplysubmit(String salebackId,String salebackmxids,String rebuyId) throws Exception{
+		ISaleBackService service = ServiceFactory.getSaleBackService();
+		
+		IDB session = DBFactory.getDB();
+		boolean result = false;
+		try {
+			session.beginTransaction();
+			SalebackApplyInfo apply = service.getSalebackApplyInfo(salebackId);
+			apply.setCreateDt(DateTimeUtil.getWorkdayString());
+			service.modifySalebackApplyInfo(apply);
+			result = service.salebackapplysubmit(salebackmxids);
+			session.endTransaction();
+		} catch (SQLException e) {
+			try {
+				session.rollback();
+				throw new BizAppException(ISysErrorNo.ERR_DBERR, "提交失败");
+			} catch (SQLException e1) {
+			
+				e1.printStackTrace();
+			}
+		}
+		if(result){
+			return this.toApplyDetailPagetwo(new Page(),salebackId,salebackId,"",rebuyId);
+		}else{
+			throw new BizAppException(ISysErrorNo.ERR_DBERR, "提交失败");
+		}
+		
+	}
+	
+	
+	/**---------------撤销申请start------------------------*/
+	/**
+	 * 可撤销返售申请的票据批次查询
+	 * @return
+	 * @throws BizAppException 
+	 */
+	@RequestMapping(params="method=searchApplyRevokableSalebackBatch")
+	public ModelAndView searchApplyRevokableSalebackBatch(SaleBackSearchBean bean,Page page) throws BizAppException{
+		ModelAndView mv = new ModelAndView("busi/saleback/electronic/revoke_saleback_apply_batch_elec");
+		ISaleBackService service = ServiceFactory.getSaleBackService();
+		page.activeCommand();
+		List<SalebackApplyInfo> batch = new ArrayList<SalebackApplyInfo>();
+
+		try {
+			bean.setApplyOperNo(ResourceUtil.getSessionLoginfo().getUserId());
+			batch = service.getSalebackApplyInfolistbysearchbean(bean, page);
+		} catch (Exception e) {
+			
+			throw new BizAppException(ISysErrorNo.ERR_DBERR, "查询失败");
+		}
+
+		mv.addObject("batchList",batch);
+		mv.addObject("page",page);
+		return mv;
+	}
+	
+	/**返售撤销清单页面*/
+	@RequestMapping(params="method=searchsalebacklistElec")
+	public ModelAndView searchsalebacklistElec(SaleBackSearchBean bean,Page page) throws SQLException, BizAppException{
+		page.activeCommand();
+		ModelAndView mv = new ModelAndView();
+		ISaleBackService service = ServiceFactory.getSaleBackService();
+		List<SalebackBillInfo> listbill = new ArrayList<SalebackBillInfo>();
+		List<SalebackApplyInfo> batchlist = new ArrayList<SalebackApplyInfo>();
+		try {
+			bean.setApplyOperNo(ResourceUtil.getSessionLoginfo().getUserId());
+			batchlist = service.getSalebackApplyInfolistbysearchbean(bean, page);
+		} catch (Exception e) {
+			throw new BizAppException(ISysErrorNo.ERR_DBERR, "查询失败");
+		}
+		if(batchlist.size()<=0){
+			return searchApplyRevokableSalebackBatch(new SaleBackSearchBean(),page);
+		}
+		try {
+			listbill = service.getSalebackBillInfolistbysearchbean(bean, page);
+		} catch (Exception e) {
+			throw new BizAppException(ISysErrorNo.ERR_DBERR, "查询失败");
+		}
+		
+		mv.addObject("batch", batchlist.get(0));
+		mv.addObject("resultList", listbill);
+		mv.addObject("page", page);
+		mv.setViewName("busi/saleback/electronic/revoke_saleback_apply_bill_list_elec");
+		return mv;
+		
+	}
+	
+	/**撤销返售申请*/
+	/**
+	 * @param salebackmxId 清单主键
+	 * @param salebackId  批次主键
+	 * @return
+	 * @throws Exception 
+	 */
+	@RequestMapping(params="method=revokesalebackapply")
+	public ModelAndView revokesalebackapply(String salebackmxId,String salebackId) throws Exception{
+		ISaleBackService service = ServiceFactory.getSaleBackService();
+		String status = StatusUtils.queryStatus("SalebackApplyController", "applysubmitelec", null)[0];
+		IDB session = DBFactory.getDB();
+		try {
+			session.beginTransaction();
+			service.editsalebackbillstatus(salebackmxId, status,salebackId);
+			session.endTransaction();
+			
+		} catch (SQLException e) {
+			try {
+				session.rollback();
+			} catch (SQLException e1) {
+				
+				e1.printStackTrace();
+			}
+			CommonLog.getCommonLogCache().errorMessage("批次列表查询失败");
+			throw new BizAppException("批次列表查询失败,"+e.getMessage());
+		}
+		SaleBackSearchBean bean = new SaleBackSearchBean();
+		bean.setSalebackId(salebackId);
+		Page page = new Page();
+		return searchsalebacklistElec(bean,page);
+	}
+	
+	/**---------------撤销申请end------------------------*/
+	
+	
+	/**-----------------背书start--------------------------------*/
+	/**
+	 * 可进行返售背书的票据批次查询
+	 * @return
+	 * @throws BizAppException 
+	 */
+	@RequestMapping(params="method=searchEndorsableSaleBackBatch")
+	public ModelAndView searchEndorsableSaleBackBatch(SaleBackSearchBean bean,Page page) throws BizAppException{
+		page.activeCommand();
+		ModelAndView mv = new ModelAndView("busi/saleback/electronic/saleback_endorse_batch_elec");
+		ISaleBackService service = ServiceFactory.getSaleBackService();
+		List<SalebackApplyInfo> batchList = new ArrayList<SalebackApplyInfo>();
+		
+		try {
+			
+			batchList = service.getSalebackendorseApplyInfolistbysearchbean(bean,page);
+		
+		} catch (Exception e) {
+			
+			CommonLog.getCommonLogCache().errorMessage("批次列表查询失败");
+			throw new BizAppException("批次列表查询失败,"+e.getMessage());
+		}
+		mv.addObject("batchList",batchList);
+		mv.addObject("page", page);
+		return mv;
+	}
+	
+	/**
+	 * 进入背书申请清单页面
+	 * @param bean
+	 * @param page
+	 * @return
+	 * @throws BizAppException
+	 */
+	@RequestMapping(params="method=salebackendorseapply")
+	public ModelAndView salebackendorseapply(SaleBackSearchBean bean,Page page) throws BizAppException{
+		page.activeCommand();
+		ModelAndView mv = new ModelAndView();
+		ISaleBackService service = ServiceFactory.getSaleBackService();
+		List<SalebackBillInfo> listbill = new ArrayList<SalebackBillInfo>();
+		List<SalebackApplyInfo> batchlist = new ArrayList<SalebackApplyInfo>();
+		IDB session = DBFactory.getDB();
+		try {
+			session.beginTransaction();
+			batchlist = service.getSalebackApplyInfolistbysearchbean(bean, page);
+			if(batchlist.size()<=0){
+				return searchEndorsableSaleBackBatch(new SaleBackSearchBean(),page);
+			}
+			listbill = service.getSalebackBillInfolistbysearchbean(bean, page);
+			session.endTransaction();
+		} catch (SQLException e) {
+			try {
+				session.rollback();
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			}
+			CommonLog.getCommonLogCache().errorMessage("清单列表查询失败");
+			throw new BizAppException("清单列表查询失败,"+e.getMessage());
+		} catch (Exception e) {
+			CommonLog.getCommonLogCache().errorMessage("清单列表查询失败");
+			throw new BizAppException("清单列表查询失败,"+e.getMessage());
+		}
+		
+		mv.addObject("batch", batchlist.get(0));
+		mv.addObject("resultList", listbill);
+		mv.addObject("page", page);
+		mv.setViewName("busi/saleback/electronic/saleback_endorse_bill_list_elec");
+		return mv;
+		
+	}
+	/**
+	 * 背书提交
+	 * @param page
+	 * @param salebackmxIds
+	 * @return
+	 * @throws BizAppException 
+	 */
+	@RequestMapping(params="method=submitSalebackEndorse")
+	public ModelAndView submitSalebackEndorse(Page page,String salebackmxIds,SaleBackSearchBean bean) throws BizAppException{
+		ISaleBackService service = ServiceFactory.getSaleBackService();
+		UserLoginfo user = ResourceUtil.getSessionLoginfo();
+		try {
+			service.submitSalebackEndorse(bean.getSalebackId(),salebackmxIds,user);
+		} catch (Exception e) {
+			CommonLog.getCommonLogCache().errorMessage("背书申请提交失败");
+			throw new BizAppException("背书申请提交失败,"+e.getMessage());
+		}
+		return salebackendorseapply(bean,page);
+	}
+	
+	
+	
+	
+	
+	/**
+	 * 可撤销返售背书的票据批次查询
+	 * @return
+	 * @throws BizAppException 
+	 */
+	@RequestMapping(params="method=searchEndorseRevokableSalebackBatch")
+	public ModelAndView searchEndorseRevokableSalebackBatch(SaleBackSearchBean bean,Page page) throws BizAppException{
+		ModelAndView mv = new ModelAndView("busi/saleback/electronic/revoke_saleback_endorse_batch_elec");
+		page.activeCommand();
+		ISaleBackService service = ServiceFactory.getSaleBackService();
+		List<SalebackApplyInfo> batchList = new ArrayList<SalebackApplyInfo>();
+		IDB session = DBFactory.getDB();
+		try {
+			session.beginTransaction();
+			
+			batchList = service.getSalebackendorsecxInfolistbysearchbean(bean,page);//getSalebackendorsecxInfolistbysearchbean应该调用的BSb603
+			session.endTransaction();
+		} catch (Exception e) {
+			try {
+				session.rollback();
+			} catch (SQLException e1) {
+		
+				e1.printStackTrace();
+			}
+			CommonLog.getCommonLogCache().errorMessage("批次列表查询失败");
+			throw new BizAppException("批次列表查询失败,"+e.getMessage());
+		}
+		mv.addObject("batchList",batchList);
+		mv.addObject("page", page);
+		return mv;
+	}
+	
+	/**
+	 * 撤销背书清单页面
+	 * @param bean
+	 * @param page
+	 * @return
+	 * @throws Exception 
+	 */
+	@RequestMapping(params="method=searchsalebackcxendorselistElec")
+	public ModelAndView searchsalebackcxendorselistElec(SaleBackSearchBean bean,Page page) throws Exception{
+		page.activeCommand();
+		ModelAndView mv = new ModelAndView();
+		ISaleBackService service = ServiceFactory.getSaleBackService();
+		List<SalebackBillInfo> listbill = new ArrayList<SalebackBillInfo>();
+		List<SalebackApplyInfo> batchlist = new ArrayList<SalebackApplyInfo>();
+		
+		try {
+			
+			batchlist = service.getSalebackendorsecxInfolistbysearchbean(bean, page);
+			listbill = service.getSalebackcxBillInfolistbysearchbean(bean, page);//getSalebackcxBillInfolistbysearchbean应该掉的
+			if(listbill.size()<=0){
+				return searchEndorseRevokableSalebackBatch(new SaleBackSearchBean(),page);
+			}
+		} catch (SQLException e) {
+			
+			CommonLog.getCommonLogCache().errorMessage("清单列表查询失败");
+			throw new BizAppException("清单列表查询失败,"+e.getMessage());
+		}
+		
+		mv.addObject("batch", batchlist.get(0));
+		mv.addObject("resultList", listbill);
+		mv.addObject("page", page);
+		mv.setViewName("busi/saleback/electronic/saleback_revoke_endorse_bill_list_elec");
+		return mv;
+	}
+	
+	
+	/**
+	 * 撤销背书
+	 * @param page
+	 * @param salebackmxIds
+	 * @return
+	 * @throws Exception 
+	 */
+	@RequestMapping(params="method=revokeSalebackEndorse")
+	public ModelAndView revokeSalebackEndorse(Page page,String salebackmxIds,SaleBackSearchBean bean) throws Exception{
+		ISaleBackService service = ServiceFactory.getSaleBackService();
+		try {
+			service.cancelElecSaleBackEndorse(salebackmxIds);
+		} catch (Exception e) {
+			CommonLog.getCommonLogCache().errorMessage("撤销背书失败");
+			throw new BizAppException("撤销背书失败,"+e.getMessage());
+		}
+		return searchsalebackcxendorselistElec(bean,page);
+	}
+	
+	/**-----------------背书end--------------------------------*/
+	
+	/**-----------------纸票start---------------------------------*/
+	/**申请批次页面
+	 * @throws Exception */
+	@RequestMapping(params="method=entityapplybatch")
+	public ModelAndView EntityApplyBatch(Page page,SaleBackSearchBean bean,String isinner,String newsalebackId) throws Exception{
+		ModelAndView mv = new ModelAndView();
+		page.activeCommand();
+		IDB session = DBFactory.getDB();
+		bean.setBillClass(IDict.K_BILL_CLASS.K_ENTY_BILL);
+		if("0".equals(isinner)){//同业
+			bean.setIsInner("0");
+			mv.addObject("batchList",service.getRebuyApplyInfoBydisctypeandnowdate(page, bean));
+		}else if("1".equals(isinner)){//系统内
+			bean.setIsInner("1");
+			mv.addObject("batchList",service.getRebuyApplyInfoBydisctypeandnowdate(page, bean));
+		}
+		mv.setViewName("busi/saleback/entity/saleback_entity_apply_batch_main");
+		mv.addObject("newsalebackId",newsalebackId);
+		mv.addObject("page", page);
+		mv.addObject("isinner",isinner);
+		return mv;
+	}
+	
+	/**
+	 * 票据管理
+	 * @param query
+	 * @param page
+	 * @return
+	 * @throws Exception 
+	 */
+	@RequestMapping(params="method=billManage")
+	public ModelAndView BillManage(SaleBackSearchBean bean,Page page,String newsalebackId,String iscancel,String rateids) throws Exception{
+		ModelAndView mv= new ModelAndView();
+		mv.setViewName("busi/saleback/entity/saleback_entity_apply_bill_list");
+		ISaleBackService salebackService = ServiceFactory.getSaleBackService();
+        IDB session = DBFactory.getDB(); // 获取数据库连接
+		page.activeCommand();
+			try {
+				session.beginTransaction();
+				SaleBackSearchBean query = salebackService.initsalebackSearchbean(bean);
+				List<RebuyApplyInfo> rebuylist = salebackService.getRebuyApplyInfoBydisctypeandnowdatetwo(page,query);	
+				if(rebuylist.size()==0){
+					return EntityApplyBatch(new Page(),new SaleBackSearchBean(),bean.getIsInner(),newsalebackId);
+				}
+				RebuyApplyInfo apply=rebuylist.get(0);
+				SalebackApplyInfo batch;
+				batch = salebackService.saveConditionForAddSalebackApplyInfoAndModifySalebackBillInfo(query.getRebuyId(),newsalebackId,iscancel);
+				mv.addObject("isnewcreatebatch", salebackService.isnewcreatebatch(query.getRebuyId(), newsalebackId, iscancel));
+				List<SalebackBillInfo> billlist = salebackService.getSalebackBillInfolist(page,query,iscancel,rateids);	//class status
+				if(billlist.size()==0){
+					return EntityApplyBatch(new Page(),new SaleBackSearchBean(),bean.getIsInner(),newsalebackId);
+				}
+				
+				mv.addObject("salebackIdss", salebackService.getallids(billlist));
+				mv.addObject("batch",salebackService.copyrebuytosalebackapply(batch,apply));
+				mv.addObject("newsalebackId",batch.getSalebackId());
+				mv.addObject("bean", query);
+				mv.addObject("billList",billlist);
+				mv.addObject("rateids",rateids);
+				mv.addObject("page",page);
+				mv.addObject("iscancel",iscancel);
+				session.endTransaction();
+			}catch (SQLException e) {
+				try {
+					session.rollback();
+				} catch (SQLException e1) {
+					e1.printStackTrace();
+				}
+				CommonLog.getCommonLogCache().errorMessage("查询返售清单失败");
+				throw new BizAppException("查询返售清单失败,"+e.getMessage());
+			}
+		
+		
+		return mv;
+	}
+	
+	/**
+	 * 纸票申请提交
+	 * @return
+	 * @throws Exception 
+	 */
+	@RequestMapping(params="method=applysubmitentity")
+	public ModelAndView entitysalebackapplysubmit(SaleBackSearchBean query,Page page,String salebackmxids) throws Exception{
+		IDB session = DBFactory.getDB();
+		page.activeCommand();
+		try {
+			session.beginTransaction();
+			service.submitSalebackapplyentity(query.getSalebackId(), salebackmxids, ResourceUtil.getSessionLoginfo());
+			session.endTransaction();
+		}catch (SQLException e) {
+			CommonLog.getCommonLogCache().errorMessage("提交失败");
+			throw new BizAppException("提交失败,"+e.getMessage());
+		}
+		return BillManage(query,page,query.getSalebackId(),"1","1");
+	}
+	
+	
+	/**
+	 * 可撤销返售申请的票据批次查询
+	 * @return
+	 * @throws BizAppException 
+	 */
+	@RequestMapping(params="method=entityApplyRevokableSalebackBatch")
+	public ModelAndView entityApplyRevokableSalebackBatch(SaleBackSearchBean bean,Page page) throws BizAppException{
+		ModelAndView mv = new ModelAndView("busi/saleback/entity/saleback_entity_revoke_apply_batch");
+		ISaleBackService service = ServiceFactory.getSaleBackService();
+		page.activeCommand();
+		List<SalebackApplyInfo> batch = new ArrayList<SalebackApplyInfo>();
+		bean.setBillClass(IDict.K_BILL_CLASS.K_ENTY_BILL);
+		bean.setApplyOperNo(ResourceUtil.getSessionLoginfo().getUserId());
+		try {
+			batch = service.getSaleBackApplyForCondition(page, bean);
+		}catch (Exception e) {
+			CommonLog.getCommonLogCache().errorMessage("查询批次失败");
+			throw new BizAppException("查询批次失败,"+e.getMessage());
+		}
+
+		mv.addObject("batchList",batch);
+		mv.addObject("page",page);
+		return mv;
+	}
+	
+	/**
+	 * 纸票返售撤销申请明细页面
+	 * @param bean
+	 * @param page
+	 * @return
+	 * @throws BizAppException 
+	 */
+	@RequestMapping(params="method=searchsalebacklistEntity")
+	public ModelAndView searchsalebacklistEntity(SaleBackSearchBean bean,Page page) throws BizAppException{
+		ModelAndView mv = new ModelAndView();
+		page.activeCommand();
+		bean.setBillClass(IDict.K_BILL_CLASS.K_ENTY_BILL);
+		bean.setApplyOperNo(ResourceUtil.getSessionLoginfo().getUserId());
+		List<SalebackBillInfo> billlist;
+		List<SalebackApplyInfo> applylist;
+		SalebackApplyInfo apply;
+		try {
+			billlist = service.getSalebackBillInfolistbysearchbean(bean, page);
+			if(billlist.size()==0){
+				return entityApplyRevokableSalebackBatch(new SaleBackSearchBean(),new Page());
+			}
+			applylist = service.getSalebackApplyInfolistbysearchbean(bean,page);
+			apply = applylist.get(0);
+		}catch (Exception e) {
+			CommonLog.getCommonLogCache().errorMessage("查询清单失败");
+			throw new BizAppException("查询清单失败,"+e.getMessage());
+		}
+		mv.setViewName("busi/saleback/entity/saleback_entity_revoke_apply_bill");
+		mv.addObject("batch",apply);
+		mv.addObject("resultList",billlist);
+		mv.addObject("page",page);
+		return mv;
+	}
+	
+	/**
+	 * 撤销提交
+	 * @param salebackmxId
+	 * @param bean
+	 * @return
+	 * @throws BizAppException
+	 */
+	@RequestMapping(params="method=revokeapplysubmit")
+	public ModelAndView revokeapplysubmit(String salebackmxId,SaleBackSearchBean bean) throws BizAppException{
+		ISaleBackService service = ServiceFactory.getSaleBackService();
+		IDB session = DBFactory.getDB();
+		try {
+			String status = StatusUtils.queryStatus("SalebackApplyController", "applysubmitentity", null)[0];
+			session.beginTransaction();
+			service.editsalebackbillstatus(salebackmxId, status,bean.getSalebackId());
+			session.endTransaction();
+			
+		} catch (Exception e) {
+			try {
+				session.rollback();
+			} catch (SQLException e1) {
+				
+				e1.printStackTrace();
+			}
+			CommonLog.getCommonLogCache().errorMessage("撤销失败");
+			throw new BizAppException("撤销失败,"+e.getMessage());
+		}
+		return searchsalebacklistEntity(bean,new Page());
+	}
+	
+	
+	/**
+	 * 票据详情查看
+	 * @param request
+	 * @return
+	 * @throws BizAppException
+	 * @throws ParseException 
+	 */
+	@RequestMapping(params = "method=goBillInfo")
+	public ModelAndView goBillInfo(String salebackmxId){
+		ModelAndView mv = new ModelAndView("busi/saleback/entity/salebackinfo");
+		ISaleBackService salebackService = ServiceFactory.getSaleBackService();
+		SalebackBillInfo salebackBillInfo = null;
+		try {
+			salebackBillInfo = salebackService.getConfirmReceiveBillForId(salebackmxId).get(0);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		mv.addObject("bill", salebackBillInfo);
+		mv.addObject("salebackmxId", salebackmxId);
+		return mv;
+	}
+	
+	/**-----------------纸票end---------------------------------*/
+	
+}

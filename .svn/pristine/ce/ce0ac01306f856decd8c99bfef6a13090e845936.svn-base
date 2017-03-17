@@ -1,0 +1,405 @@
+package com.herongtech.console.web.busicontroller.saleback;
+
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
+
+import com.herongtech.console.core.common.json.AjaxJson;
+import com.herongtech.console.core.common.json.Page;
+import com.herongtech.console.core.constant.IDict;
+import com.herongtech.console.core.controller.BaseController;
+import com.herongtech.console.core.util.DateTimeUtil;
+import com.herongtech.console.core.util.ResourceUtil;
+import com.herongtech.console.core.util.StatusUtils;
+import com.herongtech.console.domain.saleback.bean.SaleBackSearchBean;
+import com.herongtech.console.domain.saleback.bean.SalebackApplyInfo;
+import com.herongtech.console.domain.saleback.bean.SalebackBillInfo;
+import com.herongtech.console.service.ServiceFactory;
+import com.herongtech.console.service.interfaces.ISaleBackService;
+import com.herongtech.db.impl.session.DBFactory;
+import com.herongtech.db.interfaces.IDB;
+import com.herongtech.exception.impl.BizAppException;
+import com.herongtech.log.CommonLog;
+import com.herongtech.sysconstant.ISysErrorNo;
+
+/**
+ * 返售记账Controller
+ *
+ */
+@Scope("prototype")
+@Controller
+@RequestMapping("/salebackAccountController")
+public class SalebackAccountController extends BaseController {
+
+	private ISaleBackService service = ServiceFactory.getSaleBackService();
+	
+	/**
+	 * 可进行返售确认的票据批次查询
+	 * @return
+	 */
+	@RequestMapping(params="method=searchConfirmableSalebackBatch")
+	public ModelAndView searchConfirmableSalebackBatch(Page page,SaleBackSearchBean query) throws BizAppException{
+		page.activeCommand();
+		ModelAndView mv = new ModelAndView("busi/saleback/electronic/saleback_confirm_batch_elec");
+		ISaleBackService saleBackService = ServiceFactory.getSaleBackService();
+		try {
+			mv.addObject("batchList", saleBackService.getSaleBackApplyForCondition(page, query));
+		} catch (SQLException e) {
+			CommonLog.getCommonLogCache().errorMessage("批次列表查询失败");
+			throw new BizAppException(ISysErrorNo.ERR_DBERR, e.getMessage());
+		} catch (Exception e) {
+			CommonLog.getCommonLogCache().errorMessage("批次列表查询失败");
+			throw new BizAppException(ISysErrorNo.ERR_DBERR, e.getMessage());
+		}
+		mv.addObject("page", page);
+		return mv;
+	}
+
+	/**
+	 * 查询可进行返售确认的票据列表
+	 * @return
+	 * @throws Exception 
+	 */
+	@RequestMapping(params="method=searchSaleBackConfirmBillList")
+	public ModelAndView searchSaleBackConfirmBillList(Page page,SaleBackSearchBean query) throws Exception{
+		page.activeCommand();
+		ISaleBackService saleBackService = ServiceFactory.getSaleBackService();
+		IDB session = DBFactory.getDB(); // 获取数据库连接
+		ModelAndView mv = new ModelAndView("busi/saleback/electronic/saleback_confirm_bill_list_elec");
+		String[] opers = StatusUtils.queryStatus("salebackAccountController", "salebackaccountyeselec", null);
+		try {
+			query.setOpers(opers);
+			session.beginTransaction();
+			mv.addObject("batch",saleBackService.getSalebackApplyInfo(query.getSalebackId(), query));
+			mv.addObject("resultList",saleBackService.getSaleBackBillListForBatch(page, query));
+			session.endTransaction();
+		} catch (SQLException e) {
+			try {
+				session.rollback();
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			}
+			e.printStackTrace();
+			CommonLog.getCommonLogCache().errorMessage("返售确认票据列表查询失败");
+			throw new BizAppException(ISysErrorNo.ERR_DBERR, e.getMessage());
+		}
+		mv.addObject("page", page);
+		return mv;
+	}
+	
+	/**
+	 * 返售确认
+	 * @return
+	 * @throws Exception 
+	 */
+	@RequestMapping(params="method=doConfirmSubmit")
+	@ResponseBody
+	public AjaxJson doConfirmSubmit(SaleBackSearchBean query,String ids) throws Exception{
+		AjaxJson retJson = new AjaxJson();
+		IDB session = DBFactory.getDB(); // 获取数据库连接
+		ISaleBackService saleBackService = ServiceFactory.getSaleBackService();
+		try {
+			session.beginTransaction();
+			boolean bool = saleBackService.confirmSubmit(query.getSalebackId(), ids);
+			session.endTransaction();
+			if(bool){
+				retJson.setSuccess(true);
+				//retJson.setMsg("签收成功");
+			}else{
+				retJson.setSuccess(false);
+				retJson.setMsg("对方还没有对信息进行处理，不能进行签收，请等待对方回复！");
+			}
+		} catch (SQLException e) {
+			try {
+                session.rollback();
+            } catch (SQLException e1) {
+                e1.printStackTrace();
+            }
+		}
+		return retJson;
+	}
+	
+	/**
+	 * 可进行返售记账的票据批次查询
+	 * @return
+	 */
+	@RequestMapping(params="method=searchAccountableSalebackBatch")
+	public ModelAndView searchAccountableSalebackBatch(Page page,SaleBackSearchBean query) throws BizAppException{
+		page.activeCommand();
+		String branchNo= ResourceUtil.getSessionLoginfo().getBranchNo();
+		String billClass=IDict.K_BILL_CLASS.K_ELEC_BILL;
+		query.setBillClass(billClass);
+		query.setBranchNo(branchNo);
+		ModelAndView mv = new ModelAndView("busi/saleback/electronic/saleback_acct_batch_elec");
+		ISaleBackService saleBackService = ServiceFactory.getSaleBackService();
+		try {
+			query.setOpers(StatusUtils.queryStatus("salebackAccountController", "salebackaccountelec", null));
+			mv.addObject("batchList", saleBackService.getSaleBackaccountbatch(page, query));
+		} catch (SQLException e) {
+			CommonLog.getCommonLogCache().errorMessage("批次列表查询失败");
+			throw new BizAppException(ISysErrorNo.ERR_DBERR, e.getMessage());
+		} catch (Exception e) {
+			CommonLog.getCommonLogCache().errorMessage("批次列表查询失败");
+			throw new BizAppException(ISysErrorNo.ERR_DBERR, e.getMessage());
+		}
+		mv.addObject("page", page);
+		return mv;
+	}
+	
+	/**
+	 * 查询可进行返售记账的票据列表
+	 * @return
+	 * @throws Exception 
+	 */
+	@RequestMapping(params="method=searchSaleBackAccountBillList")
+	public ModelAndView searchSaleBackAccountBillList(Page page,SaleBackSearchBean query) throws Exception{
+		page.activeCommand();
+		ISaleBackService saleBackService = ServiceFactory.getSaleBackService();
+		IDB session = DBFactory.getDB(); // 获取数据库连接
+		ModelAndView mv = new ModelAndView("busi/saleback/electronic/saleback_acct_bill_list_elec");
+		try {
+			query.setOperStatus(StatusUtils.queryStatus("salebackAccountController", "salebackaccountelec", null)[0]);
+			session.beginTransaction();
+			mv.addObject("batch",saleBackService.getSalebackApplyInfo(query.getSalebackId(), query));
+			mv.addObject("resultList",saleBackService.getSaleBackBillListForBatch(page, query));
+			session.endTransaction();
+		} catch (SQLException e) {
+			try {
+				session.rollback();
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			}
+			e.printStackTrace();
+			CommonLog.getCommonLogCache().errorMessage("返售记账票据列表查询失败");
+			throw new BizAppException(ISysErrorNo.ERR_DBERR, e.getMessage());
+		}
+		mv.addObject("page", page);
+		return mv;
+	}
+
+	/**
+	 * 确认记账
+	 * @return
+	 * @throws Exception 
+	 */
+	@RequestMapping(params="method=doAccountSubmit")
+	@ResponseBody
+	public AjaxJson doAccountSubmit (SaleBackSearchBean query,String ids) throws Exception{
+		AjaxJson retJson = new AjaxJson();
+		IDB session = DBFactory.getDB(); // 获取数据库连接
+		ISaleBackService saleBackService = ServiceFactory.getSaleBackService();
+		try {
+			session.beginTransaction();
+			saleBackService.accouontSubmit(ids);
+			session.endTransaction();
+			retJson.setSuccess(true);
+		} catch (SQLException e) {
+			try {
+                session.rollback();
+                retJson.setSuccess(false);
+                retJson.setMsg("记账失败");
+				return retJson;
+            } catch (SQLException e1) {
+                e1.printStackTrace();
+            }
+		}
+		return retJson;
+	}
+	
+	/**--------------纸票start-------------------*/
+	/**
+	 * 返售记账批次页面
+	 * @param bean
+	 * @param page
+	 * @return
+	 * @throws Exception 
+	 */
+	@RequestMapping(params="method=entitySalebackaccountBatch")
+	public ModelAndView SalebackcancelAapplyEntityBatch(SaleBackSearchBean bean,Page page) throws Exception{
+		ModelAndView mv = new ModelAndView("busi/saleback/entity/saleback_entity_account_apply_batch");
+		page.activeCommand();
+		List<SalebackApplyInfo> batch = new ArrayList<SalebackApplyInfo>();
+		String[] opers = StatusUtils.queryStatus("salebackAccountController", "accountapply", null);
+		bean.setOpers(opers);
+		try {
+			batch = service.getaccountbatchlist(bean, page);
+		}catch (Exception e) {
+			CommonLog.getCommonLogCache().errorMessage("查询批次失败");
+			throw new BizAppException("查询批次失败,"+e.getMessage());
+		}
+
+		mv.addObject("batchList",batch);
+		mv.addObject("page",page);
+		return mv;
+	}
+	
+	
+	
+	/**
+	 * 返售记账清单页面
+	 * @param bean
+	 * @param page
+	 * @return
+	 * @throws Exception 
+	 */
+	@RequestMapping(params="method=entitySalebackaccountbill")
+	public ModelAndView SalebackcancelAapplyEntitybill(SaleBackSearchBean bean,Page page) throws Exception{
+		page.activeCommand();
+		ModelAndView mv = new ModelAndView();
+		String[] opers = StatusUtils.queryStatus("salebackAccountController", "accountapply", null);
+		bean.setOpers(opers);
+		List<SalebackBillInfo> billlist;
+		List<SalebackApplyInfo> applylist;
+		SalebackApplyInfo apply;
+		try {
+			billlist = service.getaccountbilllist(bean, page);
+			if(billlist.size()==0){
+				return SalebackcancelAapplyEntityBatch(new SaleBackSearchBean(),new Page());
+			}
+			applylist = service.getaccountbatchlist(bean,page);
+			apply = applylist.get(0);
+		}catch (Exception e) {
+			CommonLog.getCommonLogCache().errorMessage("查询清单失败");
+			throw new BizAppException("查询清单失败,"+e.getMessage());
+		}
+		mv.setViewName("busi/saleback/entity/saleback_entity_account_bill");
+		mv.addObject("batch",apply);
+		mv.addObject("resultList",billlist);
+		return mv;
+		
+		
+	}
+	
+	
+	/**
+	 * 返售记账
+	 * @param bean
+	 * @param page
+	 * @return
+	 * @throws Exception 
+	 */
+	@RequestMapping(params="method=entitySalebackaccount")
+	public ModelAndView SalebackaccountAapply(SaleBackSearchBean bean,Page page,String salebackmxIds) throws Exception{
+		ModelAndView mv = new ModelAndView();
+		IDB session = DBFactory.getDB();
+		try {
+			session.beginTransaction();
+			service.entityaccountapply(bean,salebackmxIds);
+			session.endTransaction();
+		} catch (SQLException e) {
+			try {
+				session.rollback();
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			}
+			CommonLog.getCommonLogCache().errorMessage("记账失败");
+			throw new BizAppException("记账失败,"+e.getMessage());
+		} 
+		
+		
+		return SalebackcancelAapplyEntitybill(bean,page);
+	}
+	
+	
+	
+	
+	/**
+	 * 撤销记账批次页面
+	 * @param bean
+	 * @param page
+	 * @return
+	 * @throws Exception 
+	 */
+	@RequestMapping(params="method=entitySalebackcancelaccountBatch")
+	public ModelAndView Salebackcancelaccountbatch(SaleBackSearchBean bean,Page page) throws Exception{
+		ModelAndView mv = new ModelAndView("busi/saleback/entity/saleback_entity_cancel_account_apply_batch");
+		page.activeCommand();
+		List<SalebackApplyInfo> batch = new ArrayList<SalebackApplyInfo>();
+		String[] opers = StatusUtils.queryStatus("salebackAccountController", "entitycancelaccount", null);
+		bean.setOpers(opers);
+		bean.setAcctOperNo(ResourceUtil.getSessionLoginfo().getUserId());
+		bean.setAccountDt(DateTimeUtil.getWorkdayString());
+		try {
+			batch = service.getaccountbatchlist(bean, page);
+		}catch (Exception e) {
+			CommonLog.getCommonLogCache().errorMessage("查询批次失败");
+			throw new BizAppException("查询批次失败,"+e.getMessage());
+		}
+
+		mv.addObject("batchList",batch);
+		mv.addObject("page",page);
+		return mv;
+	}
+	
+	
+	/**
+	 * 撤销记账清单
+	 * @param bean
+	 * @param page
+	 * @return
+	 * @throws Exception 
+	 */
+	@RequestMapping(params="method=entitySalebackcancelaccountbill")
+	public ModelAndView Salebackcancelaccountbill(SaleBackSearchBean bean,Page page) throws Exception{
+		page.activeCommand();
+		ModelAndView mv = new ModelAndView("busi/saleback/entity/saleback_entity_cancel_account_apply_bill");
+		String[] opers = StatusUtils.queryStatus("salebackAccountController", "entitycancelaccount", null);
+		bean.setOpers(opers);
+		bean.setAcctOperNo(ResourceUtil.getSessionLoginfo().getUserId());
+		bean.setAccountDt(DateTimeUtil.getWorkdayString());
+		List<SalebackBillInfo> billlist;
+		List<SalebackApplyInfo> applylist;
+		SalebackApplyInfo apply;
+		try {
+			billlist = service.getaccountbilllist(bean, page);
+			if(billlist.size()==0){
+				return Salebackcancelaccountbatch(new SaleBackSearchBean(),new Page());
+			}
+			applylist = service.getaccountbatchlist(bean,page);
+			apply = applylist.get(0);
+		}catch (Exception e) {
+			CommonLog.getCommonLogCache().errorMessage("查询清单失败");
+			throw new BizAppException("查询清单失败,"+e.getMessage());
+		}
+		mv.addObject("batch",apply);
+		mv.addObject("resultList",billlist);
+		return mv;
+	}
+	
+	/**
+	 * 返售撤销记账
+	 * @param bean
+	 * @param page
+	 * @return
+	 * @throws Exception 
+	 */
+	@RequestMapping(params="method=entitySalebackcancelaccount")
+	public ModelAndView entitySalebackcancelaccount(SaleBackSearchBean bean,Page page,String salebackmxIds) throws Exception{
+		ModelAndView mv = new ModelAndView();
+		IDB session = DBFactory.getDB();
+		try {
+			session.beginTransaction();
+			service.entitycancelaccount(bean, salebackmxIds);
+			session.endTransaction();
+		} catch (Exception e) {
+			try {
+				session.rollback();
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			}
+			CommonLog.getCommonLogCache().errorMessage("撤销记账失败");
+			throw new BizAppException("撤销记账失败,"+e.getMessage());
+		}
+		
+		return Salebackcancelaccountbill(bean,page);
+	}
+	
+	/**--------------纸票end-------------------*/
+	
+}

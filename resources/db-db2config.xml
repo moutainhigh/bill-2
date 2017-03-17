@@ -1,0 +1,70 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<datasources generated="not" >
+    <datasource>
+		<dbname>cbsp</dbname>
+
+		<!-- 连接数据库的名字 -->
+		<jdbcusername>db2inst1</jdbcusername>
+		<!-- 连接数据库的密码 -->
+		<jdbcpassword>db2inst1</jdbcpassword>
+		<!-- 连接数据库的url -->
+		<jdbcurl>jdbc:db2://192.168.1.2:50000/cbsp:currentSchema=DB2INST1;driverType=4;fullyMaterializeLobData=true;fullyMaterializeInputStreams=true;progressiveStreaming=2;progresssiveLocators=2;
+		</jdbcurl> 
+		 <!-- 连接数据库驱动 -->
+		<jdbcdriver>com.ibm.db2.jcc.DB2Driver
+		</jdbcdriver>
+		
+		<!-- 数据源类型  c3p0 jndi dbcp -->
+		<pooltype>dbcp</pooltype>
+		<!-- 连接池的最大容纳链接数目默认15个 -->
+		<max>50</max>
+		<!-- 连接池的最小链接数目，默认3个 -->
+		<min>1</min>
+		<!-- 连接池取不到链接等待时间 -->
+		<wait>10</wait>
+		
+		<!-- 连接池连接有效性检测  -->
+		<validationQuery>select * from SYSIBM.SYSDUMMY1</validationQuery>
+		<testOnBorrow>true</testOnBorrow>
+		<testOnReturn>true</testOnReturn>
+		<testWhileIdle>true</testWhileIdle>
+		
+		<!-- 数据库事务隔离级别 -->
+		<defaultTransactionIsolation>READ_COMMITTED</defaultTransactionIsolation>
+		
+		<!-- 空闲连接检测时间间隔 单位毫秒-->
+		<minEvictableIdleTimeMillis>1800000</minEvictableIdleTimeMillis>
+		<!-- 失效检查线程运行时间间隔，如果小于等于0，不会启动检查线程，默认-1  -->
+		<timeBetweenEvictionRunsMillis>-1</timeBetweenEvictionRunsMillis>
+		
+		<!-- 应用层中未主动释放的连接 强制中断开。 是否自我中断, 默认是 false 注意生产上这些选项  removeAbandoned  logAbandoned 要设置成false  -->
+		<removeAbandoned>true</removeAbandoned>
+		<!--  几秒后会自我中断单位秒, removeAbandoned 必须为 true  -->
+		<removeAbandonedTimeout>3600</removeAbandonedTimeout>
+		<logAbandoned>true</logAbandoned>
+		
+		<!-- 是否默认连接池 -->
+		<default>true</default>
+		<!-- 是否可用 -->
+		<enable>true</enable>
+		<dialect>DB2</dialect>
+		<dbtype>db2</dbtype>
+		<secretpassword>false</secretpassword>
+		<cancursor>true</cancursor>
+ 	    <canscroll>false</canscroll>
+	</datasource>
+	
+	<datasource>
+		<enable>false</enable>
+		<dbname>pose_jndi</dbname>
+		<type>jndi</type>
+		<!-- jndisource的名字 -->
+		<jndiname>jdbc/pose</jndiname>
+		<default>false</default>
+		<dialect>db2</dialect>
+		<dbtype>db2</dbtype>
+		<secretpassword>false</secretpassword>
+		<cancursor>true</cancursor>
+ 	    <canscroll>false</canscroll>
+	</datasource>
+</datasources>  

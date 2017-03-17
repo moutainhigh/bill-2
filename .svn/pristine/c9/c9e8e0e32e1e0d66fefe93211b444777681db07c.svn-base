@@ -1,0 +1,66 @@
+log4j.rootLogger=INFO,CONSOLE,FILE
+
+log4j.addivity.org.apache=true
+
+
+###################
+# Console Appender
+###################
+log4j.appender.CONSOLE=org.apache.log4j.ConsoleAppender
+log4j.appender.Threshold=INFO
+log4j.appender.CONSOLE.encoding=gbk
+log4j.appender.CONSOLE.Target=System.out
+log4j.appender.CONSOLE.layout=org.apache.log4j.PatternLayout
+log4j.appender.CONSOLE.layout.ConversionPattern=-%-4r [%t] %-5p %x - %m%n
+#log4j.appender.CONSOLE.layout.ConversionPattern=[start]%d{DATE}[DATE]%n%p[PRIORITY]%n%x[NDC]%n%t[THREAD] n%c[CATEGORY]%n%m[MESSAGE]%n%n
+
+#####################
+# File Appender
+#####################
+log4j.appender.FILE=org.apache.log4j.DailyRollingFileAppender
+log4j.appender.FILE.encoding=gbk
+log4j.appender.FILE.File=bizfile.log
+log4j.appender.FILE.DatePattern='.'yyyy-MM-dd
+log4j.appender.FILE.Append=true
+log4j.appender.FILE.layout=org.apache.log4j.PatternLayout
+log4j.appender.FILE.layout.ConversionPattern=%d -%-4r [%t] %-5p %c %x - %m%n
+# Use this layout for LogFactor 5 analysis
+
+log4j.logger.common.log=INFO, common_log
+log4j.appender.common_log=org.apache.log4j.DailyRollingFileAppender
+log4j.appender.common_log.File=appfile.log
+log4j.appender.common_log.DatePattern='.'yyyy-MM-dd
+log4j.appender.common_log.MaxFileSize=51200KB
+log4j.appender.common_log.MaxBackupIndex=30
+log4j.appender.common_log.layout=org.apache.log4j.PatternLayout
+log4j.appender.common_log.layout.ConversionPattern=%X{bizId} %d %p [%C:%L]%m%n
+log4j.appender.common_log.threshold=INFO
+log4j.appender.common_log.ImmediateFlush=true
+log4j.appender.common_log.Append=true
+
+log4j.logger.mqchannel.log=INFO, mqchannel_log
+log4j.appender.mqchannel_log=org.apache.log4j.DailyRollingFileAppender
+log4j.appender.mqchannel_log.File=mqchannelfile.log
+log4j.appender.mqchannel_log.DatePattern='.'yyyy-MM-dd
+log4j.appender.mqchannel_log.MaxFileSize=51200KB
+log4j.appender.mqchannel_log.MaxBackupIndex=30
+log4j.appender.mqchannel_log.layout=org.apache.log4j.PatternLayout
+log4j.appender.mqchannel_log.layout.ConversionPattern=%X{bizId} %d %p [%C:%L]%m%n
+log4j.appender.mqchannel_log.threshold=INFO
+log4j.appender.mqchannel_log.ImmediateFlush=true
+log4j.appender.mqchannel_log.Append=true
+
+log4j.logger.xmlchannel.log=INFO, xmlchannel_log
+log4j.appender.xmlchannel_log=org.apache.log4j.DailyRollingFileAppender
+log4j.appender.xmlchannel_log.File=xmlchannelfile.log
+log4j.appender.xmlchannel_log.DatePattern='.'yyyy-MM-dd
+log4j.appender.xmlchannel_log.MaxFileSize=51200KB
+log4j.appender.xmlchannel_log.MaxBackupIndex=30
+log4j.appender.xmlchannel_log.layout=org.apache.log4j.PatternLayout
+log4j.appender.xmlchannel_log.layout.ConversionPattern=%X{bizId} %d %p [%C:%L]%m%n
+log4j.appender.xmlchannel_log.threshold=INFO
+log4j.appender.xmlchannel_log.ImmediateFlush=true
+log4j.appender.xmlchannel_log.Append=true
+
+#####将SQL语句输出到控制台   测试时使用
+log4j.logger.com.herongtech.db.impl.session.DB=INFO,CONSOLE

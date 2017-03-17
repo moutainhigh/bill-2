@@ -1,0 +1,274 @@
+<link href="/bbsp/public/css/print.css" rel="stylesheet" type="text/css" />
+<table width="1700" border="0" align="center" cellpadding="0"cellspacing="0">
+	<tr>
+		<td class="STYLE-H">$!td.headPrintBean.topic</td>
+	</tr>
+	<tr>
+		<td>
+			<table width="100%" border="0" align="center" cellpadding="0" cellspacing="0">
+				<!-- 1 -->
+				<tr align="center">
+					<td width="140" class="STYLE-H1">交易对手全称：
+					</td>
+					<td width="450" class="STYLE-H1-1">$!td.headPrintBean.aimbrchName
+					</td>
+					<td width="140" class="STYLE-H1">我行入账账号：
+					</td>
+					<td collspan="3" class="STYLE-H1-1" >$!td.headPrintBean.tradeAcct 
+					</td>
+				</tr>
+				<!-- 2 -->
+				<tr>
+					<td width="140" class="STYLE-H1">批次号：
+					</td>
+					<td width="450"  class="STYLE-H1-1">$!td.headPrintBean.applyNo
+					</td>
+					<td width="140" class="STYLE-H1">票据品种：
+					</td>
+					<td width="400" class="STYLE-H1-1">$!td.headPrintBean.billClassString
+					</td>
+					<td width="140" class="STYLE-H1">票据类型：
+					</td>
+					<td width="320" class="STYLE-H1-1">$!td.headPrintBean.billTypeString
+					</td>					
+				</tr>
+				<!-- 3 -->
+				<tr>
+					<td class="STYLE-H1">转入类型：
+					</td>
+					<td class="STYLE-H1-1">$!td.headPrintBean.prodNoString
+					</td>					
+					<td class="STYLE-H1">转入日期：
+					</td>
+					<td class="STYLE-H1-1">$!td.headPrintBean.rebuyDt 
+					</td>
+					<td class="STYLE-H1">贴现利率（%）：
+					</td>
+					<td class="STYLE-H1-1">$!td.headPrintBean.rate
+					</td>					
+				</tr>
+				<!-- 4-->
+				<tr>
+					<td class="STYLE-H1">赎回开放日：
+					</td>
+					<td class="STYLE-H1-1">$!td.headPrintBean.rebuyOpenDt
+					</td>		
+					<td class="STYLE-H1">赎回截止日：
+					</td>
+					<td class="STYLE-H1-1">$!td.headPrintBean.rebuyDueDt
+					</td>	
+				</tr>
+				<!-- 5 -->
+				<tr>
+					<td class="STYLE-H1">清算方式：
+					</td>
+					<td class="STYLE-H1-1">$!td.headPrintBean.qsTypeString
+					</td>
+					<td class="STYLE-H1">不得转让标记：
+					</td>
+					<td class="STYLE-H1-1">$!td.headPrintBean.forbiddenFlagStr
+					</td>
+					<td class="STYLE-H1">总张数：
+					</td>
+					<td class="STYLE-H1-1">$!td.headPrintBean.no
+					</td>
+				</tr>
+				<!-- 6-->
+				<tr>
+					<td class="STYLE-H1">总金额：
+					</td>
+					<td class="STYLE-H1-1">$!td.headPrintBean.allBillMoneyString
+					<td class="STYLE-H1">总利息：
+					</td>
+					<td class="STYLE-H1-1">$!td.headPrintBean.allInterest
+					</td>
+					<td class="STYLE-H1">总实付金额：
+					</td>
+					<td class="STYLE-H1-1">$!td.headPrintBean.payMoneyString
+					</td>
+				</tr>
+			</table>
+		</td>
+	</tr>
+</table>
+	<!--分页 第一页记录数 -->
+		#set($firstPageSizeCost=22)
+		<!-- 分页 2....n页 记录数 --> 		
+		#set($pageSize=28) 
+		
+		#set($firstPageSize=$firstPageSizeCost) 				
+		#set($totalSize=$td.itemList.size()) 
+		#set($totalPages=0)		
+		#if($totalSize>$firstPageSizeCost)
+			#set($totalSize=$totalSize - $firstPageSize)
+			#set($totalPages=$totalSize/$pageSize) 
+			#set($myMod=$totalSize%$pageSize)
+			#if($myMod>0)
+				#set($totalPages=$totalPages+1)
+			#end
+		#else
+			#set($firstPageSize=$totalSize)												
+		#end	
+		#set($totalPages=$totalPages+1)	
+
+<table width="1700" align="center" 
+	style="border-collapse:collapse;table-layout:fixed;margin:0;padding:0; border:1px solid #666;height:23px;">
+	<!-- 2 电票  票号长 特殊处理-->
+	#if($td.headPrintBean.billClass.equals("2"))
+		<thead>
+			<td width="50" class="STYLE-LH">序号</td>
+			<td width="260" class="STYLE-LH">票号</td>
+			<td width="95" class="STYLE-LH">出票日</td>
+			<td width="110" class="STYLE-LH">票面到期日</td>
+			<td width="110" class="STYLE-LH">计息到期日</td>
+			<td width="90" class="STYLE-LH">计息天数</td>
+			<td width="130" class="STYLE-LH">票面金额</td>
+			<td width="120" class="STYLE-LH">贴现利息</td>
+			<td width="130" class="STYLE-LH">实付金额</td>		
+			<td width="300" class="STYLE-LH">承兑人</td>
+			<td width="310" class="STYLE-LH">出票人开户银行</td>
+		</thead>
+				#set($i=0)
+				#foreach( $tmp in [1..$firstPageSize] )
+						<tr>
+							<td align="center" class="STYLE-L-1">$!td.itemList.get($i).sequence </td>
+							<td align="center" class="STYLE-L-1-BNO">$!td.itemList.get($i).billNo</td>
+							<td align="center" class="STYLE-L-1">$!td.itemList.get($i).outBillDate</td>
+							<td align="center" class="STYLE-L-1">$!td.itemList.get($i).endBillDate</td>
+							<td align="center" class="STYLE-L-1">$!td.itemList.get($i).galeDate</td>
+							<td align="center" class="STYLE-L-1">$!td.itemList.get($i).interestCalDays</td>
+							
+							<td align="right" class="STYLE-L-1">$!td.itemList.get($i).billAmountString</td>
+							<td align="right" class="STYLE-L-1">$!td.itemList.get($i).interestString</td>
+							<td align="right" class="STYLE-L-1">$!td.itemList.get($i).payMoneyString</td>
+									
+							<td align="left" class="STYLE-L-2" nowrap="nowrap">$!td.itemList.get($i).acceptor</td>
+							<td align="left" class="STYLE-L-2" nowrap="nowrap">$!td.itemList.get($i).outBillBank</td>		
+						</tr>
+						#set($i=$i+1)
+				#end
+	#else
+		<thead>
+			<td width="60" class="STYLE-LH">序号</td>
+			<td width="150" class="STYLE-LH">票号</td>
+			<td width="110" class="STYLE-LH">出票日</td>
+			<td width="120" class="STYLE-LH">票面到期日</td>
+			<td width="120" class="STYLE-LH">计息到期日</td>
+			<td width="95" class="STYLE-LH">计息天数</td>
+			<td width="130" class="STYLE-LH">票面金额</td>
+			<td width="120" class="STYLE-LH">贴现利息</td>
+			<td width="130" class="STYLE-LH">实付金额</td>		
+			<td width="340" class="STYLE-LH">承兑人</td>
+			<td width="310" class="STYLE-LH">出票人开户银行</td>
+		</thead>
+				#set($i=0)
+				#foreach( $tmp in [1..$firstPageSize] )
+						<tr>
+							<td align="center" class="STYLE-L-1">$!td.itemList.get($i).sequence </td>
+							<td align="center" class="STYLE-L-1">$!td.itemList.get($i).billNo</td>
+							<td align="center" class="STYLE-L-1">$!td.itemList.get($i).outBillDate</td>
+							<td align="center" class="STYLE-L-1">$!td.itemList.get($i).endBillDate</td>
+							<td align="center" class="STYLE-L-1">$!td.itemList.get($i).galeDate</td>
+							<td align="center" class="STYLE-L-1">$!td.itemList.get($i).interestCalDays</td>
+							
+							<td align="right" class="STYLE-L-1">$!td.itemList.get($i).billAmountString</td>
+							<td align="right" class="STYLE-L-1">$!td.itemList.get($i).interestString</td>
+							<td align="right" class="STYLE-L-1">$!td.itemList.get($i).payMoneyString</td>
+									
+							<td align="left" class="STYLE-L-2" nowrap="nowrap">$!td.itemList.get($i).acceptor</td>
+							<td align="left" class="STYLE-L-2" nowrap="nowrap">$!td.itemList.get($i).outBillBank</td>		
+						</tr>
+						#set($i=$i+1)
+				#end
+	#end	
+</table>
+<table width="1700">
+			<tr align="center">
+				<td height="130" align="center" width="1700" class="STYLE-PAGE">第 1 页 共 $totalPages 页</td>
+			</tr>
+</table>
+
+
+#if($totalPages>1)
+			#set($nextPageSize=$firstPageSizeCost)
+			#set($i=2)			
+			#foreach( $j in [2..$totalPages] )
+					#if($pageSize>$totalSize)
+						#set($pageSize=$totalSize)
+					#end
+					<table width="1700"  align="center" style="border-collapse:collapse;table-layout:fixed;margin:0;padding:0; border:1px solid #666;height:23px;">
+											#if($td.headPrintBean.billClass.equals("2"))	
+														<thead>
+															<td width="50" class="STYLE-LH">序号</td>
+															<td width="260" class="STYLE-LH">票号</td>
+															<td width="95" class="STYLE-LH">出票日</td>
+															<td width="110" class="STYLE-LH">票面到期日</td>
+															<td width="110" class="STYLE-LH">计息到期日</td>
+															<td width="90" class="STYLE-LH">计息天数</td>
+															<td width="130" class="STYLE-LH">票面金额</td>
+															<td width="120" class="STYLE-LH">贴现利息</td>
+															<td width="130" class="STYLE-LH">实付金额</td>		
+															<td width="300" class="STYLE-LH">承兑人</td>
+															<td width="310" class="STYLE-LH">出票人开户银行</td>
+															</thead>
+																	#foreach( $tmp2 in [1..$pageSize] )
+																			<tr>
+																				<td align="center" class="STYLE-L-1">$!td.itemList.get($nextPageSize).sequence </td>
+																				<td align="center" class="STYLE-L-1-BNO">$!td.itemList.get($nextPageSize).billNo</td>
+																				<td align="center" class="STYLE-L-1">$!td.itemList.get($nextPageSize).outBillDate</td>
+																				<td align="center" class="STYLE-L-1">$!td.itemList.get($nextPageSize).endBillDate</td>
+																				<td align="center" class="STYLE-L-1">$!td.itemList.get($nextPageSize).galeDate</td>
+																				<td align="center" class="STYLE-L-1">$!td.itemList.get($nextPageSize).interestCalDays</td>
+																				
+																				<td align="right" class="STYLE-L-1">$!td.itemList.get($nextPageSize).billAmountString</td>
+																				<td align="right" class="STYLE-L-1">$!td.itemList.get($nextPageSize).interestString</td>
+																				<td align="right" class="STYLE-L-1">$!td.itemList.get($nextPageSize).payMoneyString</td>
+																						
+																				<td align="left" class="STYLE-L-2" nowrap="nowrap">$!td.itemList.get($nextPageSize).acceptor</td>
+																				<td align="left" class="STYLE-L-2" nowrap="nowrap">$!td.itemList.get($nextPageSize).outBillBank</td>		
+																			</tr>
+																			#set($nextPageSize=$nextPageSize+1)
+																	#end
+											#else
+													<thead>
+														<td width="60" class="STYLE-LH">序号</td>
+														<td width="150" class="STYLE-LH">票号</td>
+														<td width="110" class="STYLE-LH">出票日</td>
+														<td width="120" class="STYLE-LH">票面到期日</td>
+														<td width="120" class="STYLE-LH">计息到期日</td>
+														<td width="95" class="STYLE-LH">计息天数</td>
+														<td width="130" class="STYLE-LH">票面金额</td>
+														<td width="120" class="STYLE-LH">贴现利息</td>
+														<td width="130" class="STYLE-LH">实付金额</td>		
+														<td width="340" class="STYLE-LH">承兑人</td>
+														<td width="310" class="STYLE-LH">出票人开户银行</td>
+													</thead>
+													#foreach( $tmp2 in [1..$pageSize] )
+																	<tr>
+																				<td align="center" class="STYLE-L-1">$!td.itemList.get($nextPageSize).sequence </td>
+																				<td align="center" class="STYLE-L-1">$!td.itemList.get($nextPageSize).billNo</td>
+																				<td align="center" class="STYLE-L-1">$!td.itemList.get($nextPageSize).outBillDate</td>
+																				<td align="center" class="STYLE-L-1">$!td.itemList.get($nextPageSize).endBillDate</td>
+																				<td align="center" class="STYLE-L-1">$!td.itemList.get($nextPageSize).galeDate</td>
+																				<td align="center" class="STYLE-L-1">$!td.itemList.get($nextPageSize).interestCalDays</td>
+																				
+																				<td align="right" class="STYLE-L-1">$!td.itemList.get($nextPageSize).billAmountString</td>
+																				<td align="right" class="STYLE-L-1">$!td.itemList.get($nextPageSize).interestString</td>
+																				<td align="right" class="STYLE-L-1">$!td.itemList.get($nextPageSize).payMoneyString</td>
+																						
+																				<td align="left" class="STYLE-L-2" nowrap="nowrap">$!td.itemList.get($nextPageSize).acceptor</td>
+																				<td align="left" class="STYLE-L-2" nowrap="nowrap">$!td.itemList.get($nextPageSize).outBillBank</td>		
+																			</tr>
+																			#set($nextPageSize=$nextPageSize+1)
+												  #end
+											#end	  
+					</table>
+					<table class="STYLE-QD-T-PAGE">
+								<tr align="center">
+									<td height="152" align="center" width="1700" class="STYLE-PAGE">第 $i 页 共 $totalPages 页</td>
+								</tr>
+					</table>
+					#set($i=$i+1)
+					#set($totalSize=$totalSize - $pageSize)
+			#end
+	#end 	

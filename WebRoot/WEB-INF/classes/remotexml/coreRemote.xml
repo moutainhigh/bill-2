@@ -1,0 +1,437 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+	一.交易代码与服务请求类映射配置文件
+	<action tran_no="交易代码唯一" tran_name="交易名称" root_element="根节点" head_element="可以为空" body_element="如果有body部分，该属性不能为空">
+		<struct name="HEAD">    汇总信息/公共信息
+		<struct name="BODY">    list信息,没有循环部分 可不配置
+	
+	exfield：	接口字段
+	field：		票据系统字段
+	field_name:	字段说明	
+	value_type：	字段类型	取值范围： 字符串：string、整形：int、 浮点型：double
+	javabean_alias：	字段取值对象key名
+	defaultvalue：	默认值
+	后面可考虑加一些校验 required，取值范围等校验
+ -->
+<root>
+	<action tran_no="001001002" tran_name="买方付息贴现记账" root_element="Document" head_element="" body_element="billList">	
+		<head>
+			<item exfield="TRANS_BRANCH_NO" field="transBranchNo" field_name="交易机构"  value_type="string"  javabean_alias="af" defaultvalue="" />
+			<item exfield="TRANS_USER_NO" field="transUserNo" field_name="交易柜员"  value_type="string"  javabean_alias="af" defaultvalue=""/>
+			<item exfield="TRANS_DT" field="transDt" field_name="交易日期"  value_type="string"  javabean_alias="af" defaultvalue=""/>
+			<item exfield="FORE_FLOW_NO" field="foreFlowNo" field_name="交易流水号"  value_type="string" javabean_alias="af" defaultvalue=""/>
+			<item exfield="CUST_ACCOUNT" field="custAccount" field_name="客户账号"  value_type="string"  javabean_alias="apply" defaultvalue=""/>
+			<item exfield="CUST_NAME" field="custName" field_name="客户名称"  value_type="string"  javabean_alias="apply" defaultvalue=""/>
+			<item exfield="SETTLEMENT_MONEY" field="settlementMoney" field_name="实付金额"  value_type="double"  javabean_alias="af" defaultvalue=""/>
+			<item exfield="SETTLEMENT_INTEREST" field="settlementInterest" field_name="应收利息"  value_type="double"  javabean_alias="af" defaultvalue=""/>
+			<item exfield="CASH_OR_REMIT_FLAG" field="cashOrRemitFlag" field_name="钞汇标识"  value_type="string"  javabean_alias="" defaultvalue="1"/>
+			<item exfield="CURRENCY_CATEGORY" field="currencyCategory" field_name="币种"  value_type="string"  javabean_alias="" defaultvalue="CNY"/>
+		</head>	
+		<body>
+			<item exfield="BILL_NO" field="billNo" field_name="摘要"  value_type="string"  javabean_alias="list" defaultvalue=""/>
+		</body>	
+	</action>
+	
+	<action tran_no="001001003" tran_name="卖方付息贴现记账" root_element="Document" head_element="" body_element="billList">	
+		<head>
+			<item exfield="TRANS_BRANCH_NO" field="transBranchNo" field_name="交易机构"  value_type="string"  javabean_alias="af" defaultvalue="" />
+			<item exfield="TRANS_USER_NO" field="transUserNo" field_name="交易柜员"  value_type="string"  javabean_alias="af" defaultvalue=""/>
+			<item exfield="TRANS_DT" field="transDt" field_name="交易日期"  value_type="string"  javabean_alias="af" defaultvalue=""/>
+			<item exfield="FORE_FLOW_NO" field="foreFlowNo" field_name="交易流水号"  value_type="string" javabean_alias="af" defaultvalue=""/>
+			<item exfield="CUST_ACCOUNT" field="custAccount" field_name="客户账号"  value_type="string"  javabean_alias="apply" defaultvalue=""/>
+			<item exfield="CUST_NAME" field="custName" field_name="客户名称"  value_type="string"  javabean_alias="apply" defaultvalue=""/>
+			<item exfield="SETTLEMENT_MONEY" field="settlementMoney" field_name="实付金额"  value_type="double"  javabean_alias="af" defaultvalue=""/>
+			<item exfield="SETTLEMENT_INTEREST" field="settlementInterest" field_name="应收利息"  value_type="double"  javabean_alias="af" defaultvalue=""/>
+			<item exfield="CASH_OR_REMIT_FLAG" field="cashOrRemitFlag" field_name="钞汇标识"  value_type="string"  javabean_alias="" defaultvalue="1"/>
+			<item exfield="CURRENCY_CATEGORY" field="currencyCategory" field_name="币种"  value_type="string"  javabean_alias="" defaultvalue="CNY"/>
+		</head>	
+		<body>
+			<item exfield="BILL_NO" field="billNo" field_name="摘要"  value_type="string"  javabean_alias="list" defaultvalue=""/>
+		</body>	
+	</action>
+	
+	<action tran_no="001003001" tran_name="系统内卖断" root_element="Document" head_element="" body_element="billList">	
+		<head>
+			<item exfield="TRANS_BRANCH_NO" field="transBranchNo" field_name="交易机构"  value_type="string"  javabean_alias="af" defaultvalue="" />
+			<item exfield="TRANS_USER_NO" field="transUserNo" field_name="交易柜员"  value_type="string"  javabean_alias="af" defaultvalue=""/>
+			<item exfield="TRANS_DT" field="transDt" field_name="交易日期"  value_type="string"  javabean_alias="af" defaultvalue=""/>
+			<item exfield="FORE_FLOW_NO" field="foreFlowNo" field_name="交易流水号"  value_type="string" javabean_alias="af" defaultvalue=""/>
+			<item exfield="CUST_NAME" field="custName" field_name="客户名称"  value_type="string"  javabean_alias="apply" defaultvalue=""/>
+			<item exfield="SETTLEMENT_MONEY" field="settlementMoney" field_name="实收金额"  value_type="double"  javabean_alias="af" defaultvalue=""/>
+			<item exfield="SETTLEMENT_INTEREST" field="settlementInterest" field_name="应收利息"  value_type="double"  javabean_alias="af" defaultvalue=""/>
+			<item exfield="CASH_OR_REMIT_FLAG" field="cashOrRemitFlag" field_name="钞汇标识"  value_type="string"  javabean_alias="" defaultvalue="1"/>
+			<item exfield="CURRENCY_CATEGORY" field="currencyCategory" field_name="币种"  value_type="string"  javabean_alias="" defaultvalue="CNY"/>
+		</head>	
+		<body>
+			<item exfield="BILL_NO" field="billNo" field_name="摘要"  value_type="string"  javabean_alias="list" defaultvalue=""/>
+		</body>	
+	</action>
+	<action tran_no="001003002" tran_name="同业间卖断" root_element="Document" head_element="" body_element="billList">	
+		<head>
+			<item exfield="TRANS_BRANCH_NO" field="transBranchNo" field_name="交易机构"  value_type="string"  javabean_alias="af" defaultvalue="" />
+			<item exfield="TRANS_USER_NO" field="transUserNo" field_name="交易柜员"  value_type="string"  javabean_alias="af" defaultvalue=""/>
+			<item exfield="TRANS_DT" field="transDt" field_name="交易日期"  value_type="string"  javabean_alias="af" defaultvalue=""/>
+			<item exfield="FORE_FLOW_NO" field="foreFlowNo" field_name="交易流水号"  value_type="string" javabean_alias="af" defaultvalue=""/>
+			<item exfield="CUST_NAME" field="custName" field_name="客户名称"  value_type="string"  javabean_alias="apply" defaultvalue=""/>
+			<item exfield="SETTLEMENT_MONEY" field="settlementMoney" field_name="实收金额"  value_type="double"  javabean_alias="af" defaultvalue=""/>
+			<item exfield="SETTLEMENT_INTEREST" field="settlementInterest" field_name="应收利息"  value_type="double"  javabean_alias="af" defaultvalue=""/>
+			<item exfield="CASH_OR_REMIT_FLAG" field="cashOrRemitFlag" field_name="钞汇标识"  value_type="string"  javabean_alias="" defaultvalue="1"/>
+			<item exfield="CURRENCY_CATEGORY" field="currencyCategory" field_name="币种"  value_type="string"  javabean_alias="" defaultvalue="CNY"/>
+		</head>	
+		<body>
+			<item exfield="BILL_NO" field="billNo" field_name="摘要"  value_type="string"  javabean_alias="list" defaultvalue=""/>
+		</body>	
+	</action>
+	<action tran_no="001003003" tran_name="再贴现卖断" root_element="Document" head_element="" body_element="billList">	
+		<head>
+			<item exfield="TRANS_BRANCH_NO" field="transBranchNo" field_name="交易机构"  value_type="string"  javabean_alias="af" defaultvalue="" />
+			<item exfield="TRANS_USER_NO" field="transUserNo" field_name="交易柜员"  value_type="string"  javabean_alias="af" defaultvalue=""/>
+			<item exfield="TRANS_DT" field="transDt" field_name="交易日期"  value_type="string"  javabean_alias="af" defaultvalue=""/>
+			<item exfield="FORE_FLOW_NO" field="foreFlowNo" field_name="交易流水号"  value_type="string" javabean_alias="af" defaultvalue=""/>
+			<item exfield="CUST_NAME" field="custName" field_name="客户名称"  value_type="string"  javabean_alias="apply" defaultvalue=""/>
+			<item exfield="SETTLEMENT_MONEY" field="settlementMoney" field_name="实收金额"  value_type="double"  javabean_alias="af" defaultvalue=""/>
+			<item exfield="SETTLEMENT_INTEREST" field="settlementInterest" field_name="应收利息"  value_type="double"  javabean_alias="af" defaultvalue=""/>
+			<item exfield="CASH_OR_REMIT_FLAG" field="cashOrRemitFlag" field_name="钞汇标识"  value_type="string"  javabean_alias="" defaultvalue="1"/>
+			<item exfield="CURRENCY_CATEGORY" field="currencyCategory" field_name="币种"  value_type="string"  javabean_alias="" defaultvalue="CNY"/>
+		</head>	
+		<body>
+			<item exfield="BILL_NO" field="billNo" field_name="摘要"  value_type="string"  javabean_alias="list" defaultvalue=""/>
+		</body>	
+	</action>
+	<action tran_no="001003004" tran_name="系统内回购式卖出" root_element="Document" head_element="" body_element="billList">	
+		<head>
+			<item exfield="TRANS_BRANCH_NO" field="transBranchNo" field_name="交易机构"  value_type="string"  javabean_alias="af" defaultvalue="" />
+			<item exfield="TRANS_USER_NO" field="transUserNo" field_name="交易柜员"  value_type="string"  javabean_alias="af" defaultvalue=""/>
+			<item exfield="TRANS_DT" field="transDt" field_name="交易日期"  value_type="string"  javabean_alias="af" defaultvalue=""/>
+			<item exfield="FORE_FLOW_NO" field="foreFlowNo" field_name="交易流水号"  value_type="string" javabean_alias="af" defaultvalue=""/>
+			<item exfield="CUST_NAME" field="custName" field_name="客户名称"  value_type="string"  javabean_alias="apply" defaultvalue=""/>
+			<item exfield="SETTLEMENT_MONEY" field="settlementMoney" field_name="实收金额"  value_type="double"  javabean_alias="af" defaultvalue=""/>
+			<item exfield="SETTLEMENT_INTEREST" field="settlementInterest" field_name="应收利息"  value_type="double"  javabean_alias="af" defaultvalue=""/>
+			<item exfield="CASH_OR_REMIT_FLAG" field="cashOrRemitFlag" field_name="钞汇标识"  value_type="string"  javabean_alias="" defaultvalue="1"/>
+			<item exfield="CURRENCY_CATEGORY" field="currencyCategory" field_name="币种"  value_type="string"  javabean_alias="" defaultvalue="CNY"/>
+		</head>	
+		<body>
+			<item exfield="BILL_NO" field="billNo" field_name="摘要"  value_type="string"  javabean_alias="list" defaultvalue=""/>
+		</body>	
+	</action>
+	<action tran_no="001003005" tran_name="同业间回购式卖断" root_element="Document" head_element="" body_element="billList">	
+		<head>
+			<item exfield="TRANS_BRANCH_NO" field="transBranchNo" field_name="交易机构"  value_type="string"  javabean_alias="af" defaultvalue="" />
+			<item exfield="TRANS_USER_NO" field="transUserNo" field_name="交易柜员"  value_type="string"  javabean_alias="af" defaultvalue=""/>
+			<item exfield="TRANS_DT" field="transDt" field_name="交易日期"  value_type="string"  javabean_alias="af" defaultvalue=""/>
+			<item exfield="FORE_FLOW_NO" field="foreFlowNo" field_name="交易流水号"  value_type="string" javabean_alias="af" defaultvalue=""/>
+			<item exfield="CUST_NAME" field="custName" field_name="客户名称"  value_type="string"  javabean_alias="apply" defaultvalue=""/>
+			<item exfield="SETTLEMENT_MONEY" field="settlementMoney" field_name="实收金额"  value_type="double"  javabean_alias="af" defaultvalue=""/>
+			<item exfield="SETTLEMENT_INTEREST" field="settlementInterest" field_name="应收利息"  value_type="double"  javabean_alias="af" defaultvalue=""/>
+			<item exfield="CASH_OR_REMIT_FLAG" field="cashOrRemitFlag" field_name="钞汇标识"  value_type="string"  javabean_alias="" defaultvalue="1"/>
+			<item exfield="CURRENCY_CATEGORY" field="currencyCategory" field_name="币种"  value_type="string"  javabean_alias="" defaultvalue="CNY"/>
+		</head>	
+		<body>
+			<item exfield="BILL_NO" field="billNo" field_name="摘要"  value_type="string"  javabean_alias="list" defaultvalue=""/>
+		</body>	
+	</action>
+	<action tran_no="001003006" tran_name="回购式再贴现" root_element="Document" head_element="" body_element="billList">	
+		<head>
+			<item exfield="TRANS_BRANCH_NO" field="transBranchNo" field_name="交易机构"  value_type="string"  javabean_alias="af" defaultvalue="" />
+			<item exfield="TRANS_USER_NO" field="transUserNo" field_name="交易柜员"  value_type="string"  javabean_alias="af" defaultvalue=""/>
+			<item exfield="TRANS_DT" field="transDt" field_name="交易日期"  value_type="string"  javabean_alias="af" defaultvalue=""/>
+			<item exfield="FORE_FLOW_NO" field="foreFlowNo" field_name="交易流水号"  value_type="string" javabean_alias="af" defaultvalue=""/>
+			<item exfield="CUST_NAME" field="custName" field_name="客户名称"  value_type="string"  javabean_alias="apply" defaultvalue=""/>
+			<item exfield="SETTLEMENT_MONEY" field="settlementMoney" field_name="实收金额"  value_type="double"  javabean_alias="af" defaultvalue=""/>
+			<item exfield="SETTLEMENT_INTEREST" field="settlementInterest" field_name="应收利息"  value_type="double"  javabean_alias="af" defaultvalue=""/>
+			<item exfield="CASH_OR_REMIT_FLAG" field="cashOrRemitFlag" field_name="钞汇标识"  value_type="string"  javabean_alias="" defaultvalue="1"/>
+			<item exfield="CURRENCY_CATEGORY" field="currencyCategory" field_name="币种"  value_type="string"  javabean_alias="" defaultvalue="CNY"/>
+		</head>	
+		<body>
+			<item exfield="BILL_NO" field="billNo" field_name="摘要"  value_type="string"  javabean_alias="list" defaultvalue=""/>
+		</body>	
+	</action>
+	<action tran_no="001002001" tran_name="买断式系统内商承" root_element="Document" head_element="" body_element="billList">	
+		<head>
+			<item exfield="TRANS_BRANCH_NO" field="transBranchNo" field_name="交易机构"  value_type="string"  javabean_alias="af" defaultvalue="" />
+			<item exfield="TRANS_USER_NO" field="transUserNo" field_name="交易柜员"  value_type="string"  javabean_alias="af" defaultvalue=""/>
+			<item exfield="TRANS_DT" field="transDt" field_name="交易日期"  value_type="string"  javabean_alias="af" defaultvalue=""/>
+			<item exfield="FORE_FLOW_NO" field="foreFlowNo" field_name="交易流水号"  value_type="string" javabean_alias="af" defaultvalue=""/>
+			<item exfield="CUST_NAME" field="custName" field_name="客户名称"  value_type="string"  javabean_alias="apply" defaultvalue=""/>
+			<item exfield="SETTLEMENT_MONEY" field="settlementMoney" field_name="实付金额"  value_type="double"  javabean_alias="af" defaultvalue=""/>
+			<item exfield="SETTLEMENT_INTEREST" field="settlementInterest" field_name="应收利息"  value_type="double"  javabean_alias="af" defaultvalue=""/>
+			<item exfield="CASH_OR_REMIT_FLAG" field="cashOrRemitFlag" field_name="钞汇标识"  value_type="string"  javabean_alias="" defaultvalue="1"/>
+			<item exfield="CURRENCY_CATEGORY" field="currencyCategory" field_name="币种"  value_type="string"  javabean_alias="" defaultvalue="CNY"/>
+		</head>	
+		<body>
+			<item exfield="BILL_NO" field="billNo" field_name="摘要"  value_type="string"  javabean_alias="list" defaultvalue=""/>
+		</body>	
+	</action>
+	<action tran_no="001002002" tran_name="买断式系统内银承" root_element="Document" head_element="" body_element="billList">	
+		<head>
+			<item exfield="TRANS_BRANCH_NO" field="transBranchNo" field_name="交易机构"  value_type="string"  javabean_alias="af" defaultvalue="" />
+			<item exfield="TRANS_USER_NO" field="transUserNo" field_name="交易柜员"  value_type="string"  javabean_alias="af" defaultvalue=""/>
+			<item exfield="TRANS_DT" field="transDt" field_name="交易日期"  value_type="string"  javabean_alias="af" defaultvalue=""/>
+			<item exfield="FORE_FLOW_NO" field="foreFlowNo" field_name="交易流水号"  value_type="string" javabean_alias="af" defaultvalue=""/>
+			<item exfield="CUST_NAME" field="custName" field_name="客户名称"  value_type="string"  javabean_alias="apply" defaultvalue=""/>
+			<item exfield="SETTLEMENT_MONEY" field="settlementMoney" field_name="实付金额"  value_type="double"  javabean_alias="af" defaultvalue=""/>
+			<item exfield="SETTLEMENT_INTEREST" field="settlementInterest" field_name="应收利息"  value_type="double"  javabean_alias="af" defaultvalue=""/>
+			<item exfield="CASH_OR_REMIT_FLAG" field="cashOrRemitFlag" field_name="钞汇标识"  value_type="string"  javabean_alias="" defaultvalue="1"/>
+			<item exfield="CURRENCY_CATEGORY" field="currencyCategory" field_name="币种"  value_type="string"  javabean_alias="" defaultvalue="CNY"/>
+		</head>	
+		<body>
+			<item exfield="BILL_NO" field="billNo" field_name="摘要"  value_type="string"  javabean_alias="list" defaultvalue=""/>
+		</body>	
+	</action>
+	<action tran_no="001002003" tran_name="回购式系统内转贴现商承" root_element="Document" head_element="" body_element="billList">	
+		<head>
+			<item exfield="TRANS_BRANCH_NO" field="transBranchNo" field_name="交易机构"  value_type="string"  javabean_alias="af" defaultvalue="" />
+			<item exfield="TRANS_USER_NO" field="transUserNo" field_name="交易柜员"  value_type="string"  javabean_alias="af" defaultvalue=""/>
+			<item exfield="TRANS_DT" field="transDt" field_name="交易日期"  value_type="string"  javabean_alias="af" defaultvalue=""/>
+			<item exfield="FORE_FLOW_NO" field="foreFlowNo" field_name="交易流水号"  value_type="string" javabean_alias="af" defaultvalue=""/>
+			<item exfield="CUST_NAME" field="custName" field_name="客户名称"  value_type="string"  javabean_alias="apply" defaultvalue=""/>
+			<item exfield="SETTLEMENT_MONEY" field="settlementMoney" field_name="实付金额"  value_type="double"  javabean_alias="af" defaultvalue=""/>
+			<item exfield="SETTLEMENT_INTEREST" field="settlementInterest" field_name="应收利息"  value_type="double"  javabean_alias="af" defaultvalue=""/>
+			<item exfield="CASH_OR_REMIT_FLAG" field="cashOrRemitFlag" field_name="钞汇标识"  value_type="string"  javabean_alias="" defaultvalue="1"/>
+			<item exfield="CURRENCY_CATEGORY" field="currencyCategory" field_name="币种"  value_type="string"  javabean_alias="" defaultvalue="CNY"/>
+		</head>	
+		<body>
+			<item exfield="BILL_NO" field="billNo" field_name="摘要"  value_type="string"  javabean_alias="list" defaultvalue=""/>
+		</body>	
+	</action>
+	<action tran_no="001002004" tran_name="回购式系统内转贴现银承" root_element="Document" head_element="" body_element="billList">	
+		<head>
+			<item exfield="TRANS_BRANCH_NO" field="transBranchNo" field_name="交易机构"  value_type="string"  javabean_alias="af" defaultvalue="" />
+			<item exfield="TRANS_USER_NO" field="transUserNo" field_name="交易柜员"  value_type="string"  javabean_alias="af" defaultvalue=""/>
+			<item exfield="TRANS_DT" field="transDt" field_name="交易日期"  value_type="string"  javabean_alias="af" defaultvalue=""/>
+			<item exfield="FORE_FLOW_NO" field="foreFlowNo" field_name="交易流水号"  value_type="string" javabean_alias="af" defaultvalue=""/>
+			<item exfield="CUST_NAME" field="custName" field_name="客户名称"  value_type="string"  javabean_alias="apply" defaultvalue=""/>
+			<item exfield="SETTLEMENT_MONEY" field="settlementMoney" field_name="实付金额"  value_type="double"  javabean_alias="af" defaultvalue=""/>
+			<item exfield="SETTLEMENT_INTEREST" field="settlementInterest" field_name="应收利息"  value_type="double"  javabean_alias="af" defaultvalue=""/>
+			<item exfield="CASH_OR_REMIT_FLAG" field="cashOrRemitFlag" field_name="钞汇标识"  value_type="string"  javabean_alias="" defaultvalue="1"/>
+			<item exfield="CURRENCY_CATEGORY" field="currencyCategory" field_name="币种"  value_type="string"  javabean_alias="" defaultvalue="CNY"/>
+		</head>	
+		<body>
+			<item exfield="BILL_NO" field="billNo" field_name="摘要"  value_type="string"  javabean_alias="list" defaultvalue=""/>
+		</body>	
+	</action>
+	<action tran_no="001002005" tran_name="买断式同业转贴现商承" root_element="Document" head_element="" body_element="billList">	
+		<head>
+			<item exfield="TRANS_BRANCH_NO" field="transBranchNo" field_name="交易机构"  value_type="string"  javabean_alias="af" defaultvalue="" />
+			<item exfield="TRANS_USER_NO" field="transUserNo" field_name="交易柜员"  value_type="string"  javabean_alias="af" defaultvalue=""/>
+			<item exfield="TRANS_DT" field="transDt" field_name="交易日期"  value_type="string"  javabean_alias="af" defaultvalue=""/>
+			<item exfield="FORE_FLOW_NO" field="foreFlowNo" field_name="交易流水号"  value_type="string" javabean_alias="af" defaultvalue=""/>
+			<item exfield="CUST_NAME" field="custName" field_name="客户名称"  value_type="string"  javabean_alias="apply" defaultvalue=""/>
+			<item exfield="SETTLEMENT_MONEY" field="settlementMoney" field_name="实付金额"  value_type="double"  javabean_alias="af" defaultvalue=""/>
+			<item exfield="SETTLEMENT_INTEREST" field="settlementInterest" field_name="应收利息"  value_type="double"  javabean_alias="af" defaultvalue=""/>
+			<item exfield="CASH_OR_REMIT_FLAG" field="cashOrRemitFlag" field_name="钞汇标识"  value_type="string"  javabean_alias="" defaultvalue="1"/>
+			<item exfield="CURRENCY_CATEGORY" field="currencyCategory" field_name="币种"  value_type="string"  javabean_alias="" defaultvalue="CNY"/>
+		</head>	
+		<body>
+			<item exfield="BILL_NO" field="billNo" field_name="摘要"  value_type="string"  javabean_alias="list" defaultvalue=""/>
+		</body>	
+	</action>
+	<action tran_no="001002006" tran_name="买断式同业转贴现银承" root_element="Document" head_element="" body_element="billList">	
+		<head>
+			<item exfield="TRANS_BRANCH_NO" field="transBranchNo" field_name="交易机构"  value_type="string"  javabean_alias="af" defaultvalue="" />
+			<item exfield="TRANS_USER_NO" field="transUserNo" field_name="交易柜员"  value_type="string"  javabean_alias="af" defaultvalue=""/>
+			<item exfield="TRANS_DT" field="transDt" field_name="交易日期"  value_type="string"  javabean_alias="af" defaultvalue=""/>
+			<item exfield="FORE_FLOW_NO" field="foreFlowNo" field_name="交易流水号"  value_type="string" javabean_alias="af" defaultvalue=""/>
+			<item exfield="CUST_NAME" field="custName" field_name="客户名称"  value_type="string"  javabean_alias="apply" defaultvalue=""/>
+			<item exfield="SETTLEMENT_MONEY" field="settlementMoney" field_name="实付金额"  value_type="double"  javabean_alias="af" defaultvalue=""/>
+			<item exfield="SETTLEMENT_INTEREST" field="settlementInterest" field_name="应收利息"  value_type="double"  javabean_alias="af" defaultvalue=""/>
+			<item exfield="CASH_OR_REMIT_FLAG" field="cashOrRemitFlag" field_name="钞汇标识"  value_type="string"  javabean_alias="" defaultvalue="1"/>
+			<item exfield="CURRENCY_CATEGORY" field="currencyCategory" field_name="币种"  value_type="string"  javabean_alias="" defaultvalue="CNY"/>
+		</head>	
+		<body>
+			<item exfield="BILL_NO" field="billNo" field_name="摘要"  value_type="string"  javabean_alias="list" defaultvalue=""/>
+		</body>	
+	</action>
+	<action tran_no="001002007" tran_name="回购式同业转贴现商承" root_element="Document" head_element="" body_element="billList">	
+		<head>
+			<item exfield="TRANS_BRANCH_NO" field="transBranchNo" field_name="交易机构"  value_type="string"  javabean_alias="af" defaultvalue="" />
+			<item exfield="TRANS_USER_NO" field="transUserNo" field_name="交易柜员"  value_type="string"  javabean_alias="af" defaultvalue=""/>
+			<item exfield="TRANS_DT" field="transDt" field_name="交易日期"  value_type="string"  javabean_alias="af" defaultvalue=""/>
+			<item exfield="FORE_FLOW_NO" field="foreFlowNo" field_name="交易流水号"  value_type="string" javabean_alias="af" defaultvalue=""/>
+			<item exfield="CUST_NAME" field="custName" field_name="客户名称"  value_type="string"  javabean_alias="apply" defaultvalue=""/>
+			<item exfield="SETTLEMENT_MONEY" field="settlementMoney" field_name="实付金额"  value_type="double"  javabean_alias="af" defaultvalue=""/>
+			<item exfield="SETTLEMENT_INTEREST" field="settlementInterest" field_name="应收利息"  value_type="double"  javabean_alias="af" defaultvalue=""/>
+			<item exfield="CASH_OR_REMIT_FLAG" field="cashOrRemitFlag" field_name="钞汇标识"  value_type="string"  javabean_alias="" defaultvalue="1"/>
+			<item exfield="CURRENCY_CATEGORY" field="currencyCategory" field_name="币种"  value_type="string"  javabean_alias="" defaultvalue="CNY"/>
+		</head>	
+		<body>
+			<item exfield="BILL_NO" field="billNo" field_name="摘要"  value_type="string"  javabean_alias="list" defaultvalue=""/>
+		</body>	
+	</action>
+		<action tran_no="001002008" tran_name="回购式同业转贴现银承" root_element="Document" head_element="" body_element="billList">	
+		<head>
+			<item exfield="TRANS_BRANCH_NO" field="transBranchNo" field_name="交易机构"  value_type="string"  javabean_alias="af" defaultvalue="" />
+			<item exfield="TRANS_USER_NO" field="transUserNo" field_name="交易柜员"  value_type="string"  javabean_alias="af" defaultvalue=""/>
+			<item exfield="TRANS_DT" field="transDt" field_name="交易日期"  value_type="string"  javabean_alias="af" defaultvalue=""/>
+			<item exfield="FORE_FLOW_NO" field="foreFlowNo" field_name="交易流水号"  value_type="string" javabean_alias="af" defaultvalue=""/>
+			<item exfield="CUST_NAME" field="custName" field_name="客户名称"  value_type="string"  javabean_alias="apply" defaultvalue=""/>
+			<item exfield="SETTLEMENT_MONEY" field="settlementMoney" field_name="实付金额"  value_type="double"  javabean_alias="af" defaultvalue=""/>
+			<item exfield="SETTLEMENT_INTEREST" field="settlementInterest" field_name="应收利息"  value_type="double"  javabean_alias="af" defaultvalue=""/>
+			<item exfield="CASH_OR_REMIT_FLAG" field="cashOrRemitFlag" field_name="钞汇标识"  value_type="string"  javabean_alias="" defaultvalue="1"/>
+			<item exfield="CURRENCY_CATEGORY" field="currencyCategory" field_name="币种"  value_type="string"  javabean_alias="" defaultvalue="CNY"/>
+		</head>	
+		<body>
+			<item exfield="BILL_NO" field="billNo" field_name="摘要"  value_type="string"  javabean_alias="list" defaultvalue=""/>
+		</body>	
+	</action>
+	<action tran_no="001001006" tran_name="商家卖方付息贴现记账" root_element="Document" head_element="" body_element="billList">	
+		<head>
+			<item exfield="TRANS_BRANCH_NO" field="transBranchNo" field_name="交易机构"  value_type="string"  javabean_alias="af" defaultvalue="" />
+			<item exfield="TRANS_USER_NO" field="transUserNo" field_name="交易柜员"  value_type="string"  javabean_alias="af" defaultvalue=""/>
+			<item exfield="TRANS_DT" field="transDt" field_name="交易日期"  value_type="string"  javabean_alias="af" defaultvalue=""/>
+			<item exfield="FORE_FLOW_NO" field="foreFlowNo" field_name="交易流水号"  value_type="string" javabean_alias="af" defaultvalue=""/>
+			<item exfield="CUST_NAME" field="custName" field_name="客户名称"  value_type="string"  javabean_alias="apply" defaultvalue=""/>
+			<item exfield="SETTLEMENT_MONEY" field="settlementMoney" field_name="实付金额"  value_type="double"  javabean_alias="af" defaultvalue=""/>
+			<item exfield="SETTLEMENT_INTEREST" field="settlementInterest" field_name="应收利息"  value_type="double"  javabean_alias="af" defaultvalue=""/>
+			<item exfield="CASH_OR_REMIT_FLAG" field="cashOrRemitFlag" field_name="钞汇标识"  value_type="string"  javabean_alias="" defaultvalue="1"/>
+			<item exfield="CURRENCY_CATEGORY" field="currencyCategory" field_name="币种"  value_type="string"  javabean_alias="" defaultvalue="CNY"/>
+		</head>	
+		<body>
+			<item exfield="BILL_NO" field="billNo" field_name="摘要"  value_type="string"  javabean_alias="list" defaultvalue=""/>
+		</body>	
+	</action>
+	<action tran_no="001001001" tran_name="协议付息贴现记账" root_element="Document" head_element="" body_element="billList">	
+		<head>
+			<item exfield="TRANS_BRANCH_NO" field="transBranchNo" field_name="交易机构"  value_type="string"  javabean_alias="af" defaultvalue="" />
+			<item exfield="TRANS_USER_NO" field="transUserNo" field_name="交易柜员"  value_type="string"  javabean_alias="af" defaultvalue=""/>
+			<item exfield="TRANS_DT" field="transDt" field_name="交易日期"  value_type="string"  javabean_alias="af" defaultvalue=""/>
+			<item exfield="FORE_FLOW_NO" field="foreFlowNo" field_name="交易流水号"  value_type="string" javabean_alias="af" defaultvalue=""/>
+			<item exfield="CUST_NAME" field="custName" field_name="客户名称"  value_type="string"  javabean_alias="apply" defaultvalue=""/>
+			<item exfield="SETTLEMENT_MONEY" field="settlementMoney" field_name="实付金额"  value_type="double"  javabean_alias="af" defaultvalue=""/>
+			<item exfield="SETTLEMENT_INTEREST" field="settlementInterest" field_name="应收利息"  value_type="double"  javabean_alias="af" defaultvalue=""/>
+			<item exfield="CASH_OR_REMIT_FLAG" field="cashOrRemitFlag" field_name="钞汇标识"  value_type="string"  javabean_alias="" defaultvalue="1"/>
+			<item exfield="CURRENCY_CATEGORY" field="currencyCategory" field_name="币种"  value_type="string"  javabean_alias="" defaultvalue="CNY"/>
+		</head>	
+		<body>
+			<item exfield="BILL_NO" field="billNo" field_name="摘要"  value_type="string"  javabean_alias="list" defaultvalue=""/>
+		</body>	
+	</action>
+	<action tran_no="001001005" tran_name="商家买方付息贴现记账" root_element="Document" head_element="" body_element="billList">	
+		<head>
+			<item exfield="TRANS_BRANCH_NO" field="transBranchNo" field_name="交易机构"  value_type="string"  javabean_alias="af" defaultvalue="" />
+			<item exfield="TRANS_USER_NO" field="transUserNo" field_name="交易柜员"  value_type="string"  javabean_alias="af" defaultvalue=""/>
+			<item exfield="TRANS_DT" field="transDt" field_name="交易日期"  value_type="string"  javabean_alias="af" defaultvalue=""/>
+			<item exfield="FORE_FLOW_NO" field="foreFlowNo" field_name="交易流水号"  value_type="string" javabean_alias="af" defaultvalue=""/>
+			<item exfield="CUST_NAME" field="custName" field_name="客户名称"  value_type="string"  javabean_alias="apply" defaultvalue=""/>
+			<item exfield="SETTLEMENT_MONEY" field="settlementMoney" field_name="实付金额"  value_type="double"  javabean_alias="af" defaultvalue=""/>
+			<item exfield="SETTLEMENT_INTEREST" field="settlementInterest" field_name="应收利息"  value_type="double"  javabean_alias="af" defaultvalue=""/>
+			<item exfield="CASH_OR_REMIT_FLAG" field="cashOrRemitFlag" field_name="钞汇标识"  value_type="string"  javabean_alias="" defaultvalue="1"/>
+			<item exfield="CURRENCY_CATEGORY" field="currencyCategory" field_name="币种"  value_type="string"  javabean_alias="" defaultvalue="CNY"/>
+		</head>	
+		<body>
+			<item exfield="BILL_NO" field="billNo" field_name="摘要"  value_type="string"  javabean_alias="list" defaultvalue=""/>
+		</body>	
+	</action>
+	<action tran_no="001001004" tran_name="商家协议付息贴现记账" root_element="Document" head_element="" body_element="billList">	
+		<head>
+			<item exfield="TRANS_BRANCH_NO" field="transBranchNo" field_name="交易机构"  value_type="string"  javabean_alias="af" defaultvalue="" />
+			<item exfield="TRANS_USER_NO" field="transUserNo" field_name="交易柜员"  value_type="string"  javabean_alias="af" defaultvalue=""/>
+			<item exfield="TRANS_DT" field="transDt" field_name="交易日期"  value_type="string"  javabean_alias="af" defaultvalue=""/>
+			<item exfield="FORE_FLOW_NO" field="foreFlowNo" field_name="交易流水号"  value_type="string" javabean_alias="af" defaultvalue=""/>
+			<item exfield="CUST_NAME" field="custName" field_name="客户名称"  value_type="string"  javabean_alias="apply" defaultvalue=""/>
+			<item exfield="SETTLEMENT_MONEY" field="settlementMoney" field_name="实付金额"  value_type="double"  javabean_alias="af" defaultvalue=""/>
+			<item exfield="SETTLEMENT_INTEREST" field="settlementInterest" field_name="应收利息"  value_type="double"  javabean_alias="af" defaultvalue=""/>
+			<item exfield="CASH_OR_REMIT_FLAG" field="cashOrRemitFlag" field_name="钞汇标识"  value_type="string"  javabean_alias="" defaultvalue="1"/>
+			<item exfield="CURRENCY_CATEGORY" field="currencyCategory" field_name="币种"  value_type="string"  javabean_alias="" defaultvalue="CNY"/>
+		</head>	
+		<body>
+			<item exfield="BILL_NO" field="billNo" field_name="摘要"  value_type="string"  javabean_alias="list" defaultvalue=""/>
+		</body>	
+	</action>
+	
+	<action tran_no="001006001" tran_name="托收" root_element="Document" head_element="" body_element="billList">	
+		<head>
+			<item exfield="TRANS_BRANCH_NO" field="transBranchNo" field_name="交易机构"  value_type="string"  javabean_alias="af" defaultvalue="" />
+			<item exfield="TRANS_USER_NO" field="transUserNo" field_name="交易柜员"  value_type="string"  javabean_alias="af" defaultvalue=""/>
+			<item exfield="TRANS_DT" field="transDt" field_name="交易日期"  value_type="string"  javabean_alias="af" defaultvalue=""/>
+			<item exfield="FORE_FLOW_NO" field="foreFlowNo" field_name="交易流水号"  value_type="string" javabean_alias="af" defaultvalue=""/>
+			<item exfield="SETTLEMENT_MONEY" field="settlementMoney" field_name="实收金额"  value_type="double"  javabean_alias="af" defaultvalue=""/>
+			<item exfield="SETTLEMENT_INTEREST" field="settlementInterest" field_name="应收利息"  value_type="double"  javabean_alias="af" defaultvalue=""/>
+			<item exfield="CASH_OR_REMIT_FLAG" field="cashOrRemitFlag" field_name="钞汇标识"  value_type="string"  javabean_alias="" defaultvalue="1"/>
+			<item exfield="CURRENCY_CATEGORY" field="currencyCategory" field_name="币种"  value_type="string"  javabean_alias="" defaultvalue="CNY"/>
+		</head>	
+		<body>
+			<item exfield="BILL_NO" field="billNo" field_name="摘要"  value_type="string"  javabean_alias="list" defaultvalue=""/>
+		</body>	
+	</action>
+	<action tran_no="001009001" tran_name="系统内回购" root_element="Document" head_element="" body_element="billList">	
+		<head>
+			<item exfield="TRANS_BRANCH_NO" field="transBranchNo" field_name="交易机构"  value_type="string"  javabean_alias="af" defaultvalue="" />
+			<item exfield="TRANS_USER_NO" field="transUserNo" field_name="交易柜员"  value_type="string"  javabean_alias="af" defaultvalue=""/>
+			<item exfield="TRANS_DT" field="transDt" field_name="交易日期"  value_type="string"  javabean_alias="af" defaultvalue=""/>
+			<item exfield="FORE_FLOW_NO" field="foreFlowNo" field_name="交易流水号"  value_type="string" javabean_alias="af" defaultvalue=""/>
+			<item exfield="CUST_NAME" field="custName" field_name="客户名称"  value_type="string"  javabean_alias="apply" defaultvalue=""/>
+			<item exfield="SETTLEMENT_MONEY" field="settlementMoney" field_name="实收金额"  value_type="double"  javabean_alias="af" defaultvalue=""/>
+			<item exfield="SETTLEMENT_INTEREST" field="settlementInterest" field_name="应收利息"  value_type="double"  javabean_alias="af" defaultvalue=""/>
+			<item exfield="CASH_OR_REMIT_FLAG" field="cashOrRemitFlag" field_name="钞汇标识"  value_type="string"  javabean_alias="" defaultvalue="1"/>
+			<item exfield="CURRENCY_CATEGORY" field="currencyCategory" field_name="币种"  value_type="string"  javabean_alias="" defaultvalue="CNY"/>
+		</head>	
+		<body>
+			<item exfield="BILL_NO" field="billNo" field_name="摘要"  value_type="string"  javabean_alias="list" defaultvalue=""/>
+		</body>	
+	</action>
+	<action tran_no="001009002" tran_name="同业间回购" root_element="Document" head_element="" body_element="billList">	
+		<head>
+			<item exfield="TRANS_BRANCH_NO" field="transBranchNo" field_name="交易机构"  value_type="string"  javabean_alias="af" defaultvalue="" />
+			<item exfield="TRANS_USER_NO" field="transUserNo" field_name="交易柜员"  value_type="string"  javabean_alias="af" defaultvalue=""/>
+			<item exfield="TRANS_DT" field="transDt" field_name="交易日期"  value_type="string"  javabean_alias="af" defaultvalue=""/>
+			<item exfield="FORE_FLOW_NO" field="foreFlowNo" field_name="交易流水号"  value_type="string" javabean_alias="af" defaultvalue=""/>
+			<item exfield="CUST_NAME" field="custName" field_name="客户名称"  value_type="string"  javabean_alias="apply" defaultvalue=""/>
+			<item exfield="SETTLEMENT_MONEY" field="settlementMoney" field_name="实收金额"  value_type="double"  javabean_alias="af" defaultvalue=""/>
+			<item exfield="SETTLEMENT_INTEREST" field="settlementInterest" field_name="应收利息"  value_type="double"  javabean_alias="af" defaultvalue=""/>
+			<item exfield="CASH_OR_REMIT_FLAG" field="cashOrRemitFlag" field_name="钞汇标识"  value_type="string"  javabean_alias="" defaultvalue="1"/>
+			<item exfield="CURRENCY_CATEGORY" field="currencyCategory" field_name="币种"  value_type="string"  javabean_alias="" defaultvalue="CNY"/>
+		</head>	
+		<body>
+			<item exfield="BILL_NO" field="billNo" field_name="摘要"  value_type="string"  javabean_alias="list" defaultvalue=""/>
+		</body>	
+	</action>
+	<action tran_no="001010001" tran_name="系统内返售" root_element="Document" head_element="" body_element="billList">	
+		<head>
+			<item exfield="TRANS_BRANCH_NO" field="transBranchNo" field_name="交易机构"  value_type="string"  javabean_alias="af" defaultvalue="" />
+			<item exfield="TRANS_USER_NO" field="transUserNo" field_name="交易柜员"  value_type="string"  javabean_alias="af" defaultvalue=""/>
+			<item exfield="TRANS_DT" field="transDt" field_name="交易日期"  value_type="string"  javabean_alias="af" defaultvalue=""/>
+			<item exfield="FORE_FLOW_NO" field="foreFlowNo" field_name="交易流水号"  value_type="string" javabean_alias="af" defaultvalue=""/>
+			<item exfield="CUST_NAME" field="custName" field_name="客户名称"  value_type="string"  javabean_alias="apply" defaultvalue=""/>
+			<item exfield="SETTLEMENT_MONEY" field="settlementMoney" field_name="实收金额"  value_type="double"  javabean_alias="af" defaultvalue=""/>
+			<item exfield="SETTLEMENT_INTEREST" field="settlementInterest" field_name="应收利息"  value_type="double"  javabean_alias="af" defaultvalue=""/>
+			<item exfield="CASH_OR_REMIT_FLAG" field="cashOrRemitFlag" field_name="钞汇标识"  value_type="string"  javabean_alias="" defaultvalue="1"/>
+			<item exfield="CURRENCY_CATEGORY" field="currencyCategory" field_name="币种"  value_type="string"  javabean_alias="" defaultvalue="CNY"/>
+		</head>	
+		<body>
+			<item exfield="BILL_NO" field="billNo" field_name="摘要"  value_type="string"  javabean_alias="list" defaultvalue=""/>
+		</body>	
+	</action>
+	<action tran_no="001010002" tran_name="同业间返售" root_element="Document" head_element="" body_element="billList">	
+		<head>
+			<item exfield="TRANS_BRANCH_NO" field="transBranchNo" field_name="交易机构"  value_type="string"  javabean_alias="af" defaultvalue="" />
+			<item exfield="TRANS_USER_NO" field="transUserNo" field_name="交易柜员"  value_type="string"  javabean_alias="af" defaultvalue=""/>
+			<item exfield="TRANS_DT" field="transDt" field_name="交易日期"  value_type="string"  javabean_alias="af" defaultvalue=""/>
+			<item exfield="FORE_FLOW_NO" field="foreFlowNo" field_name="交易流水号"  value_type="string" javabean_alias="af" defaultvalue=""/>
+			<item exfield="CUST_NAME" field="custName" field_name="客户名称"  value_type="string"  javabean_alias="apply" defaultvalue=""/>
+			<item exfield="SETTLEMENT_MONEY" field="settlementMoney" field_name="实收金额"  value_type="double"  javabean_alias="af" defaultvalue=""/>
+			<item exfield="SETTLEMENT_INTEREST" field="settlementInterest" field_name="应收利息"  value_type="double"  javabean_alias="af" defaultvalue=""/>
+			<item exfield="CASH_OR_REMIT_FLAG" field="cashOrRemitFlag" field_name="钞汇标识"  value_type="string"  javabean_alias="" defaultvalue="1"/>
+			<item exfield="CURRENCY_CATEGORY" field="currencyCategory" field_name="币种"  value_type="string"  javabean_alias="" defaultvalue="CNY"/>
+		</head>	
+		<body>
+			<item exfield="BILL_NO" field="billNo" field_name="摘要"  value_type="string"  javabean_alias="list" defaultvalue=""/>
+		</body>	
+	</action>
+	<action tran_no="001009003" tran_name="回购再贴现" root_element="Document" head_element="" body_element="billList">	
+		<head>
+			<item exfield="TRANS_BRANCH_NO" field="transBranchNo" field_name="交易机构"  value_type="string"  javabean_alias="af" defaultvalue="" />
+			<item exfield="TRANS_USER_NO" field="transUserNo" field_name="交易柜员"  value_type="string"  javabean_alias="af" defaultvalue=""/>
+			<item exfield="TRANS_DT" field="transDt" field_name="交易日期"  value_type="string"  javabean_alias="af" defaultvalue=""/>
+			<item exfield="FORE_FLOW_NO" field="foreFlowNo" field_name="交易流水号"  value_type="string" javabean_alias="af" defaultvalue=""/>
+			<item exfield="CUST_NAME" field="custName" field_name="客户名称"  value_type="string"  javabean_alias="apply" defaultvalue=""/>
+			<item exfield="SETTLEMENT_MONEY" field="settlementMoney" field_name="实收金额"  value_type="double"  javabean_alias="af" defaultvalue=""/>
+			<item exfield="SETTLEMENT_INTEREST" field="settlementInterest" field_name="应收利息"  value_type="double"  javabean_alias="af" defaultvalue=""/>
+			<item exfield="CASH_OR_REMIT_FLAG" field="cashOrRemitFlag" field_name="钞汇标识"  value_type="string"  javabean_alias="" defaultvalue="1"/>
+			<item exfield="CURRENCY_CATEGORY" field="currencyCategory" field_name="币种"  value_type="string"  javabean_alias="" defaultvalue="CNY"/>
+		</head>	
+		<body>
+			<item exfield="BILL_NO" field="billNo" field_name="摘要"  value_type="string"  javabean_alias="list" defaultvalue=""/>
+		</body>	
+	</action>
+</root>
